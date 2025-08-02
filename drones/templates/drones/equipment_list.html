@@ -23,7 +23,7 @@
   <div class="collapse mb-4" id="addEquipmentForm">
     <form method="post" enctype="multipart/form-data" action="{% url 'equipment_create' %}">
       {% csrf_token %}
-      {% include 'flightplan/equipment_form.html' %}
+      {% include 'drones/equipment_form.html' %}
     </form>
   </div>
 

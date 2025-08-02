@@ -75,3 +75,12 @@ def lookup(dictionary, key):
 def until(value, max_value):
     return range(value, max_value)
 
+
+
+@register.filter
+def mul(value, arg):
+    """Multiply the value by the arg."""
+    try:
+        return float(value) * float(arg)
+    except (ValueError, TypeError):
+        return 0
