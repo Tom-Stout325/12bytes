@@ -12,6 +12,28 @@ Create a .env file for each client
 Create a .py file for each client in the settings folder with included apps
 
 
+Drop and recreate the database, then install from backup:
+
+Flush:
+heroku run --app airborne-images-12bytes -- python manage.py flush --noinput
+
+
+run migrations:
+heroku run --app airborne-images-12bytes -- python manage.py migrate
+
+
+Check what tables were created:
+heroku pg:psql --app airborne-images-12bytes
+\dt
+
+
+Restore db:
+heroku run --app airborne-images-12bytes -- python manage.py restore_db backup_20250801_000041.json --s3
+
+
+
+
+
 
 
 
