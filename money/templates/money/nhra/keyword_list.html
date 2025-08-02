@@ -1,0 +1,31 @@
+{% extends 'index.html' %}
+{% load crispy_forms_tags %}
+
+{% block title %}Keywords{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+  <h2 class=" text-center text-success mb-4">Keywords</h2>
+  <a href="{% url 'keyword_create' %}" class="btn btn-primary mb-3">Add New Keyword</a>
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th style="width: 200px;">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for keyword in keywords %}
+      <tr>
+        <td><strong>{{ keyword.name }}</strong> 
+            <small class="text-muted">(ID: {{ keyword.id }})</small></td>
+        <td>
+          <a href="{% url 'keyword_update' keyword.pk %}" class="btn btn-sm btn-warning">Edit</a>
+          <a href="{% url 'keyword_delete' keyword.pk %}" class="btn btn-sm btn-danger">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}
