@@ -79,4 +79,4 @@ dist/
 
 
 # In .gitignore
-!project/fixtures/money_data.json
+!project/fixtures/finance_data.json

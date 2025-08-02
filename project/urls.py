@@ -8,7 +8,7 @@ from django.views.generic import TemplateView
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('app.urls')),    
-    path('money/', include('money.urls')),
+    path('finance/', include('finance.urls')),
     path('flightplan/', include('drones.urls')),
     path('', pwa_home_redirect),
      path('manifest.json', TemplateView.as_view(template_name="manifest.json", content_type='application/json')),

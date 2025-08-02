@@ -45,7 +45,7 @@ from django.db.models import F, ExpressionWrapper, DecimalField, Sum
 
 
 class Dashboard(LoginRequiredMixin, TemplateView):
-    template_name = "money/dashboard.html"
+    template_name = "finance/dashboard.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -57,7 +57,7 @@ class Dashboard(LoginRequiredMixin, TemplateView):
 
 class Transactions(LoginRequiredMixin, ListView):
     model = Transaction
-    template_name = "money/transactions.html"
+    template_name = "finance/transactions.html"
     context_object_name = "transactions"
     paginate_by = 50
 
@@ -177,7 +177,7 @@ def get_context_data(self, **kwargs):
 
 class TransactionDetailView(LoginRequiredMixin, DetailView):
     model = Transaction
-    template_name = 'money/transactions_detail_view.html'
+    template_name = 'finance/transactions_detail_view.html'
     context_object_name = 'transaction'
 
     def get_queryset(self):
@@ -196,7 +196,7 @@ class TransactionDetailView(LoginRequiredMixin, DetailView):
 class TransactionCreateView(LoginRequiredMixin, CreateView):
     model = Transaction
     form_class = TransForm
-    template_name = 'money/transaction_add.html'
+    template_name = 'finance/transaction_add.html'
     success_url = reverse_lazy('add_transaction_success')
 
     def form_valid(self, form):
@@ -228,7 +228,7 @@ class TransactionCreateView(LoginRequiredMixin, CreateView):
 class TransactionUpdateView(LoginRequiredMixin, UpdateView):
     model = Transaction
     form_class = TransForm
-    template_name = 'money/transaction_edit.html'
+    template_name = 'finance/transaction_edit.html'
     success_url = reverse_lazy('transactions')
 
     def get_queryset(self):
@@ -279,7 +279,7 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
 
 class TransactionDeleteView(LoginRequiredMixin, DeleteView):
     model = Transaction
-    template_name = "money/transaction_confirm_delete.html"
+    template_name = "finance/transaction_confirm_delete.html"
     success_url = reverse_lazy('transactions')
 
     def get_queryset(self):
@@ -318,7 +318,7 @@ def add_transaction_success(request):
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'money/invoice/invoice_add.html'
+    template_name = 'finance/invoice/invoice_add.html'
     success_url = reverse_lazy('invoice_list')
 
     def get_context_data(self, **kwargs):
@@ -367,7 +367,7 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'money/invoice/invoice_update.html'
+    template_name = 'finance/invoice/invoice_update.html'
     success_url = reverse_lazy('invoice_list')
 
     def get_context_data(self, **kwargs):
@@ -400,7 +400,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
 
 class InvoiceListView(LoginRequiredMixin, ListView):
     model = Invoice
-    template_name = "money/invoice/invoice_list.html"
+    template_name = "finance/invoice/invoice_list.html"
     context_object_name = "invoices"
     paginate_by = 20
 
@@ -437,7 +437,7 @@ class InvoiceListView(LoginRequiredMixin, ListView):
 
 class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
-    template_name = 'money/invoice/invoice_detail.html'
+    template_name = 'finance/invoice/invoice_detail.html'
     context_object_name = 'invoice'
 
     def get_queryset(self):
@@ -460,7 +460,7 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
 
 class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
     model = Invoice
-    template_name = "money/invoice/invoice_confirm_delete.html"
+    template_name = "finance/invoice/invoice_confirm_delete.html"
     success_url = reverse_lazy('invoice_list')
 
     def delete(self, request, *args, **kwargs):
@@ -543,7 +543,7 @@ def invoice_review(request, pk):
         'current_page': 'invoices',
     }
 
-    return render(request, 'money/invoice/invoice_review.html', context)
+    return render(request, 'finance/invoice/invoice_review.html', context)
 
 @login_required
 def invoice_review_pdf(request, pk):
@@ -607,7 +607,7 @@ def invoice_review_pdf(request, pk):
     }
 
     try:
-        template = get_template('money/invoice/invoice_review_pdf.html')
+        template = get_template('finance/invoice/invoice_review_pdf.html')
         html_string = template.render(context)
         html_string = "<style>@page { size: 8.5in 11in; margin: 1in; }</style>" + html_string
 
@@ -630,7 +630,7 @@ def invoice_review_pdf(request, pk):
 def unpaid_invoices(request):
     invoices = Invoice.objects.filter(paid__iexact="No").select_related('client').order_by('due_date')
     context = {'invoices': invoices, 'current_page': 'invoices'}
-    return render(request, 'money/unpaid_invoices.html', context)
+    return render(request, 'finance/unpaid_invoices.html', context)
 
 
 
@@ -740,7 +740,7 @@ def export_invoices_pdf(request):
         return redirect('invoice_list')
 
     try:
-        template = get_template('money/invoice/invoice_pdf_export.html')
+        template = get_template('finance/invoice/invoice_pdf_export.html')
         html_string = template.render({'invoices': invoices, 'current_page': 'invoices'})
         with tempfile.NamedTemporaryFile(delete=True) as output:
             HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(output.name)
@@ -762,7 +762,7 @@ def export_invoices_pdf(request):
 
 class CategoryListView(LoginRequiredMixin, ListView):
     model = Category
-    template_name = 'money/category_page.html'
+    template_name = 'finance/category_page.html'
     context_object_name = 'category'
 
     def get_queryset(self):
@@ -777,7 +777,7 @@ class CategoryListView(LoginRequiredMixin, ListView):
 class CategoryCreateView(LoginRequiredMixin, CreateView):
     model = Category
     form_class = CategoryForm
-    template_name = "money/category_form.html"
+    template_name = "finance/category_form.html"
     success_url = reverse_lazy('category_page')
 
     def form_valid(self, form):
@@ -793,7 +793,7 @@ class CategoryCreateView(LoginRequiredMixin, CreateView):
 class CategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = Category
     form_class = CategoryForm
-    template_name = "money/category_form.html"
+    template_name = "finance/category_form.html"
     success_url = reverse_lazy('category_page')
 
     def form_valid(self, form):
@@ -808,7 +808,7 @@ class CategoryUpdateView(LoginRequiredMixin, UpdateView):
 
 class CategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = Category
-    template_name = "money/category_confirm_delete.html"
+    template_name = "finance/category_confirm_delete.html"
     success_url = reverse_lazy('category_page')
 
     def delete(self, request, *args, **kwargs):
@@ -838,7 +838,7 @@ def category_summary(request):
     context['available_years'] = [d.year for d in Transaction.objects.filter(
         user=request.user).dates('date', 'year', order='DESC').distinct()]
     context['current_page'] = 'reports'
-    return render(request, 'money/category_summary.html', context)
+    return render(request, 'finance/category_summary.html', context)
 
 
 
@@ -851,7 +851,7 @@ def category_summary_pdf(request):
     context['logo_url'] = request.build_absolute_uri('/static/img/logo.png')
 
     try:
-        template = get_template('money/category_summary_pdf.html')
+        template = get_template('finance/category_summary_pdf.html')
         html_string = template.render(context)
         html_string = "<style>@page { size: 8.5in 11in; margin: 1in; }</style>" + html_string
 
@@ -876,7 +876,7 @@ def category_summary_pdf(request):
 class SubCategoryCreateView(LoginRequiredMixin, CreateView):
     model = SubCategory
     form_class = SubCategoryForm
-    template_name = "money/sub_category_form.html"
+    template_name = "finance/sub_category_form.html"
     success_url = reverse_lazy('category_page')
 
     def form_valid(self, form):
@@ -892,7 +892,7 @@ class SubCategoryCreateView(LoginRequiredMixin, CreateView):
 class SubCategoryUpdateView(LoginRequiredMixin, UpdateView):
     model = SubCategory
     form_class = SubCategoryForm
-    template_name = "money/sub_category_form.html"
+    template_name = "finance/sub_category_form.html"
     success_url = reverse_lazy('category_page')
     context_object_name = "sub_cat"
 
@@ -908,7 +908,7 @@ class SubCategoryUpdateView(LoginRequiredMixin, UpdateView):
 
 class SubCategoryDeleteView(LoginRequiredMixin, DeleteView):
     model = SubCategory
-    template_name = "money/sub_category_confirm_delete.html"
+    template_name = "finance/sub_category_confirm_delete.html"
     success_url = reverse_lazy('category_page')
 
     def delete(self, request, *args, **kwargs):
@@ -935,7 +935,7 @@ class SubCategoryDeleteView(LoginRequiredMixin, DeleteView):
 
 class ClientListView(LoginRequiredMixin, ListView):
     model = Client
-    template_name = "money/client_list.html"
+    template_name = "finance/client_list.html"
     context_object_name = "clients"
     ordering = ['business']
 
@@ -948,7 +948,7 @@ class ClientListView(LoginRequiredMixin, ListView):
 class ClientCreateView(LoginRequiredMixin, CreateView):
     model = Client
     form_class = ClientForm
-    template_name = "money/client_form.html"
+    template_name = "finance/client_form.html"
     success_url = reverse_lazy('client_list')
 
     def form_valid(self, form):
@@ -964,7 +964,7 @@ class ClientCreateView(LoginRequiredMixin, CreateView):
 class ClientUpdateView(LoginRequiredMixin, UpdateView):
     model = Client
     form_class = ClientForm
-    template_name = "money/client_form.html"
+    template_name = "finance/client_form.html"
     success_url = reverse_lazy('client_list')
 
     def form_valid(self, form):
@@ -979,7 +979,7 @@ class ClientUpdateView(LoginRequiredMixin, UpdateView):
 
 class ClientDeleteView(LoginRequiredMixin, DeleteView):
     model = Client
-    template_name = "money/client_confirm_delete.html"
+    template_name = "finance/client_confirm_delete.html"
     success_url = reverse_lazy('client_list')
 
     def delete(self, request, *args, **kwargs):
@@ -1095,7 +1095,7 @@ def financial_statement(request):
     year = request.GET.get('year', str(timezone.now().year))
     context = get_summary_data(request, year)
     context['current_page'] = 'reports'
-    return render(request, 'money/financial_statement.html', context)
+    return render(request, 'finance/financial_statement.html', context)
 
 
 
@@ -1109,7 +1109,7 @@ def financial_statement_pdf(request, year):
     context = get_summary_data(request, selected_year)
     context['now'] = timezone.now()
 
-    html_string = render_to_string('money/financial_statement_pdf.html', context)
+    html_string = render_to_string('finance/financial_statement_pdf.html', context)
     pdf = HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf()
 
     response = HttpResponse(pdf, content_type='application/pdf')
@@ -1154,7 +1154,7 @@ def schedule_c_summary(request):
     total_expenses = sum(row['total'] for row in summary if row['total'] < 0)
     net_profit = income_total + total_expenses
 
-    return render(request, 'money/schedule_c_summary.html', {
+    return render(request, 'finance/schedule_c_summary.html', {
         'summary': summary,
         'income_total': income_total,
         'net_profit': net_profit,
@@ -1174,7 +1174,7 @@ def schedule_c_summary_pdf(request, year):
 
     logo_url = request.build_absolute_uri(static('images/logo2.png'))
 
-    html = render_to_string('money/schedule_c_summary_pdf.html', {
+    html = render_to_string('finance/schedule_c_summary_pdf.html', {
         'summary': summary,
         'income_total': income_total,
         'net_profit': net_profit,
@@ -1209,7 +1209,7 @@ def form_4797_view(request):
         'report_data': report_data,
         'current_page': 'form_4797'
     }
-    return render(request, 'money/form_4797.html', context)
+    return render(request, 'finance/form_4797.html', context)
 
 
 
@@ -1236,7 +1236,7 @@ def form_4797_pdf(request):
  
     }
 
-    template = get_template('money/form_4797_pdf.html')
+    template = get_template('finance/form_4797_pdf.html')
     html_string = template.render(context)
 
     with tempfile.NamedTemporaryFile(delete=True, suffix=".pdf") as output:
@@ -1284,11 +1284,11 @@ def nhra_summary(request):
         "years": years,
         "summary_data": result_dict,
         "urls": {
-            "reports": "/money/money/"
+            "reports": "/finance/finance/"
         },
         'current_page': 'reports'
     }
-    return render(request, "money/nhra/nhra_summary.html", context)
+    return render(request, "finance/nhra/nhra_summary.html", context)
 
 
 
@@ -1349,7 +1349,7 @@ def race_expense_report(request):
         'current_page': 'reports',
     }
 
-    return render(request, 'money/nhra/race_expense_report.html', context)
+    return render(request, 'finance/nhra/race_expense_report.html', context)
 
 
 @login_required
@@ -1398,7 +1398,7 @@ def travel_expense_analysis(request):
         'current_page': 'reports',
     }
 
-    return render(request, 'money/nhra/travel_expense_analysis.html', context)
+    return render(request, 'finance/nhra/travel_expense_analysis.html', context)
 
 
 
@@ -1436,7 +1436,7 @@ def travel_expense_analysis_pdf(request):
             'percentage': round(percentage, 2)
         })
 
-    html_string = render_to_string('money/travel_expense_analysis_pdf.html', {
+    html_string = render_to_string('finance/travel_expense_analysis_pdf.html', {
         'selected_year': selected_year,
         'income_total': income_total,
         'expense_data': expense_data,
@@ -1491,7 +1491,7 @@ def race_expense_report_pdf(request):
         'current_page': 'reports'
     }
     try:
-        template = get_template('money/race_expense_report.html')
+        template = get_template('finance/race_expense_report.html')
         html_string = template.render(context)
         html_string = "<style>@page { size: 8.5in 11in; margin: 1in; }</style>" + html_string
         with tempfile.NamedTemporaryFile(delete=True) as output:
@@ -1511,7 +1511,7 @@ def race_expense_report_pdf(request):
 @login_required
 def reports_page(request):
     context = {'current_page': 'reports'}
-    return render(request, 'money/reports.html', context)
+    return render(request, 'finance/reports.html', context)
 
 
 # ---------------------------------------------------------------------------------------------------------------   Emails
@@ -1523,7 +1523,7 @@ def send_invoice_email(request, invoice_id):
     invoice = get_object_or_404(Invoice, pk=invoice_id)
     try:
         # Generate invoice HTML and PDF
-        html_string = render_to_string('money/invoice/invoice_detail.html', {
+        html_string = render_to_string('finance/invoice/invoice_detail.html', {
             'invoice': invoice,
             'current_page': 'invoices'
         })
@@ -1598,7 +1598,7 @@ def get_mileage_context(request):
 @login_required
 def mileage_log(request):
     context = get_mileage_context(request)
-    return render(request, 'money/mileage_log.html', context)
+    return render(request, 'finance/mileage_log.html', context)
 
 
 
@@ -1606,7 +1606,7 @@ def mileage_log(request):
 class MileageCreateView(LoginRequiredMixin, CreateView):
     model = Miles
     form_class = MileageForm
-    template_name = 'money/mileage_form.html'
+    template_name = 'finance/mileage_form.html'
     success_url = reverse_lazy('mileage_log')
 
     def form_valid(self, form):
@@ -1625,7 +1625,7 @@ class MileageCreateView(LoginRequiredMixin, CreateView):
 class MileageUpdateView(LoginRequiredMixin, UpdateView):
     model = Miles
     form_class = MileageForm
-    template_name = 'money/mileage_form.html'
+    template_name = 'finance/mileage_form.html'
     success_url = reverse_lazy('mileage_log')
 
     def get_queryset(self):
@@ -1645,7 +1645,7 @@ class MileageUpdateView(LoginRequiredMixin, UpdateView):
 
 class MileageDeleteView(LoginRequiredMixin, DeleteView):
     model = Miles
-    template_name = 'money/mileage_confirm_delete.html'
+    template_name = 'finance/mileage_confirm_delete.html'
     success_url = reverse_lazy('mileage_log')
 
     def get_queryset(self):
@@ -1677,7 +1677,7 @@ def update_mileage_rate(request):
     else:
         form = MileageRateForm(instance=mileage_rate)
     context = {'form': form, 'current_page': 'mileage'}
-    return render(request, 'money/update_mileage_rate.html', context)
+    return render(request, 'finance/update_mileage_rate.html', context)
 
 
 # ---------------------------------------------------------------------------------------------------------------  Keywords
@@ -1685,7 +1685,7 @@ def update_mileage_rate(request):
 
 class KeywordListView(LoginRequiredMixin, ListView):
     model = Keyword
-    template_name = 'money/nhra/keyword_list.html'
+    template_name = 'finance/nhra/keyword_list.html'
     context_object_name = 'keywords'
 
     def get_context_data(self, **kwargs):
@@ -1698,7 +1698,7 @@ class KeywordListView(LoginRequiredMixin, ListView):
 class KeywordCreateView(LoginRequiredMixin, CreateView):
     model = Keyword
     form_class = KeywordForm
-    template_name = 'money/nhra/keyword_form.html'
+    template_name = 'finance/nhra/keyword_form.html'
     success_url = reverse_lazy('keyword_list')
 
     def form_valid(self, form):
@@ -1715,7 +1715,7 @@ class KeywordCreateView(LoginRequiredMixin, CreateView):
 class KeywordUpdateView(LoginRequiredMixin, UpdateView):
     model = Keyword
     form_class = KeywordForm
-    template_name = 'money/nhra/keyword_form.html'
+    template_name = 'finance/nhra/keyword_form.html'
     success_url = reverse_lazy('keyword_list')
 
     def form_valid(self, form):
@@ -1731,7 +1731,7 @@ class KeywordUpdateView(LoginRequiredMixin, UpdateView):
 
 class KeywordDeleteView(LoginRequiredMixin, DeleteView):
     model = Keyword
-    template_name = 'money/nhra/keyword_confirm_delete.html'
+    template_name = 'finance/nhra/keyword_confirm_delete.html'
     success_url = reverse_lazy('keyword_list')
 
     def delete(self, request, *args, **kwargs):
@@ -1758,7 +1758,7 @@ class KeywordDeleteView(LoginRequiredMixin, DeleteView):
 
 class RecurringTransactionListView(LoginRequiredMixin, ListView):
     model = RecurringTransaction
-    template_name = 'money/recurring_list.html'
+    template_name = 'finance/recurring_list.html'
     context_object_name = 'recurring_transactions'
 
     def get_queryset(self):
@@ -1774,7 +1774,7 @@ class RecurringTransactionListView(LoginRequiredMixin, ListView):
 class RecurringTransactionCreateView(LoginRequiredMixin, CreateView):
     model = RecurringTransaction
     form_class = RecurringTransactionForm
-    template_name = 'money/recurring_form.html'
+    template_name = 'finance/recurring_form.html'
     success_url = reverse_lazy('recurring_transaction_list')
     context = { 'current_page': 'recurring transactions', }
 
@@ -1792,7 +1792,7 @@ class RecurringTransactionCreateView(LoginRequiredMixin, CreateView):
 class RecurringTransactionUpdateView(LoginRequiredMixin, UpdateView):
     model = RecurringTransaction
     form_class = RecurringTransactionForm
-    template_name = 'money/recurring_form.html'
+    template_name = 'finance/recurring_form.html'
     success_url = reverse_lazy('recurring_transaction_list')
     context = { 'current_page': 'recurring transactions', }
 
@@ -1811,7 +1811,7 @@ class RecurringTransactionUpdateView(LoginRequiredMixin, UpdateView):
 
 class RecurringTransactionDeleteView(LoginRequiredMixin, DeleteView):
     model = RecurringTransaction
-    template_name = 'money/recurring_confirm_delete.html'
+    template_name = 'finance/recurring_confirm_delete.html'
     success_url = reverse_lazy('recurring_transaction_list')
     context = { 'current_page': 'recurring transactions', }
 
@@ -1858,7 +1858,7 @@ def recurring_report_view(request):
         'year': year,
         'current_page': 'recurring_transactions'
     }
-    return render(request, 'money/recurring_report.html', context)
+    return render(request, 'finance/recurring_report.html', context)
 
 
 

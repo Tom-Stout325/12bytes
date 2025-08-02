@@ -6,8 +6,8 @@ with open('full_backup.json') as f:
 filtered = []
 for obj in data:
     if obj['model'].startswith('finance.'):
-        obj['model'] = obj['model'].replace('finance.', 'money.')
+        obj['model'] = obj['model'].replace('finance.', 'finance.')
         filtered.append(obj)
 
-with open('money_data.json', 'w') as f:
+with open('finance_data.json', 'w') as f:
     json.dump(filtered, f, indent=2)
