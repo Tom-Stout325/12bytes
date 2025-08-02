@@ -33,13 +33,6 @@ local_settings.py
 .env
 .env.*
 
-# Migrations
-# **/migrations/*.py
-# !**/migrations/__init__.py
-
-# **/migrations/*.pyc
-# **/migrations/__pycache__/
-
 
 # VS Code
 .vscode/
