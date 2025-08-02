@@ -190,7 +190,7 @@
         const spinner = this.querySelector(".spinner-border");
         spinner.classList.remove("d-none");
 
-        fetch(`/finance/invoice/${invoiceId}/email/`, {
+        fetch(`/finance/${invoiceId}/email/`, {
           method: "POST",
           headers: {
             "X-CSRFToken": getCookie("csrftoken"),

@@ -318,7 +318,7 @@ def add_transaction_success(request):
 class InvoiceCreateView(LoginRequiredMixin, CreateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'finance/invoice/invoice_add.html'
+    template_name = 'finance/invoice_add.html'
     success_url = reverse_lazy('invoice_list')
 
     def get_context_data(self, **kwargs):
@@ -367,7 +367,7 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
     form_class = InvoiceForm
-    template_name = 'finance/invoice/invoice_update.html'
+    template_name = 'finance/invoice_update.html'
     success_url = reverse_lazy('invoice_list')
 
     def get_context_data(self, **kwargs):
@@ -400,7 +400,7 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
 
 class InvoiceListView(LoginRequiredMixin, ListView):
     model = Invoice
-    template_name = "finance/invoice/invoice_list.html"
+    template_name = "finance/invoice_list.html"
     context_object_name = "invoices"
     paginate_by = 20
 
@@ -437,7 +437,7 @@ class InvoiceListView(LoginRequiredMixin, ListView):
 
 class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
-    template_name = 'finance/invoice/invoice_detail.html'
+    template_name = 'finance/invoice_detail.html'
     context_object_name = 'invoice'
 
     def get_queryset(self):
@@ -460,7 +460,7 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
 
 class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
     model = Invoice
-    template_name = "finance/invoice/invoice_confirm_delete.html"
+    template_name = "finance/invoice_confirm_delete.html"
     success_url = reverse_lazy('invoice_list')
 
     def delete(self, request, *args, **kwargs):
@@ -543,7 +543,7 @@ def invoice_review(request, pk):
         'current_page': 'invoices',
     }
 
-    return render(request, 'finance/invoice/invoice_review.html', context)
+    return render(request, 'finance/invoice_review.html', context)
 
 @login_required
 def invoice_review_pdf(request, pk):
@@ -607,7 +607,7 @@ def invoice_review_pdf(request, pk):
     }
 
     try:
-        template = get_template('finance/invoice/invoice_review_pdf.html')
+        template = get_template('finance/invoice_review_pdf.html')
         html_string = template.render(context)
         html_string = "<style>@page { size: 8.5in 11in; margin: 1in; }</style>" + html_string
 
@@ -740,7 +740,7 @@ def export_invoices_pdf(request):
         return redirect('invoice_list')
 
     try:
-        template = get_template('finance/invoice/invoice_pdf_export.html')
+        template = get_template('finance/invoice_pdf_export.html')
         html_string = template.render({'invoices': invoices, 'current_page': 'invoices'})
         with tempfile.NamedTemporaryFile(delete=True) as output:
             HTML(string=html_string, base_url=request.build_absolute_uri()).write_pdf(output.name)
@@ -1288,7 +1288,7 @@ def nhra_summary(request):
         },
         'current_page': 'reports'
     }
-    return render(request, "finance/nhra/nhra_summary.html", context)
+    return render(request, "nhra/nhra_summary.html", context)
 
 
 
@@ -1349,7 +1349,7 @@ def race_expense_report(request):
         'current_page': 'reports',
     }
 
-    return render(request, 'finance/nhra/race_expense_report.html', context)
+    return render(request, 'race_expense_report.html', context)
 
 
 @login_required
@@ -1398,7 +1398,7 @@ def travel_expense_analysis(request):
         'current_page': 'reports',
     }
 
-    return render(request, 'finance/nhra/travel_expense_analysis.html', context)
+    return render(request, 'nhra/travel_expense_analysis.html', context)
 
 
 
@@ -1523,7 +1523,7 @@ def send_invoice_email(request, invoice_id):
     invoice = get_object_or_404(Invoice, pk=invoice_id)
     try:
         # Generate invoice HTML and PDF
-        html_string = render_to_string('finance/invoice/invoice_detail.html', {
+        html_string = render_to_string('finance/invoice_detail.html', {
             'invoice': invoice,
             'current_page': 'invoices'
         })
@@ -1685,7 +1685,7 @@ def update_mileage_rate(request):
 
 class KeywordListView(LoginRequiredMixin, ListView):
     model = Keyword
-    template_name = 'finance/nhra/keyword_list.html'
+    template_name = 'nhra/keyword_list.html'
     context_object_name = 'keywords'
 
     def get_context_data(self, **kwargs):
@@ -1698,7 +1698,7 @@ class KeywordListView(LoginRequiredMixin, ListView):
 class KeywordCreateView(LoginRequiredMixin, CreateView):
     model = Keyword
     form_class = KeywordForm
-    template_name = 'finance/nhra/keyword_form.html'
+    template_name = 'nhra/keyword_form.html'
     success_url = reverse_lazy('keyword_list')
 
     def form_valid(self, form):
@@ -1715,7 +1715,7 @@ class KeywordCreateView(LoginRequiredMixin, CreateView):
 class KeywordUpdateView(LoginRequiredMixin, UpdateView):
     model = Keyword
     form_class = KeywordForm
-    template_name = 'finance/nhra/keyword_form.html'
+    template_name = 'nhra/keyword_form.html'
     success_url = reverse_lazy('keyword_list')
 
     def form_valid(self, form):
@@ -1731,7 +1731,7 @@ class KeywordUpdateView(LoginRequiredMixin, UpdateView):
 
 class KeywordDeleteView(LoginRequiredMixin, DeleteView):
     model = Keyword
-    template_name = 'finance/nhra/keyword_confirm_delete.html'
+    template_name = 'nhra/keyword_confirm_delete.html'
     success_url = reverse_lazy('keyword_list')
 
     def delete(self, request, *args, **kwargs):
