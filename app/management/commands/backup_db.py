@@ -1,27 +1,22 @@
 import os
 import subprocess
 import datetime
-import boto3
 import traceback
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.core.mail import send_mail
 
 BACKUP_DIR = os.path.join(settings.BASE_DIR, 'backups')
-BUCKET_NAME = settings.AWS_STORAGE_BUCKET_NAME
-S3_FOLDER = 'backups/'
-NUM_BACKUPS_TO_KEEP = 3
+NUM_BACKUPS_TO_KEEP = 3  # Not used in dry run, but retained for consistency
 
 class Command(BaseCommand):
-    help = 'Backup database to local and S3, clean old backups, and email result.'
+    help = 'Dry-run: Backup database to local JSON file only (no S3, no email).'
 
     def handle(self, *args, **options):
         timestamp = datetime.datetime.now().strftime('%Y%m%d_%H%M%S')
         filename = f'backup_{timestamp}.json'
         local_path = os.path.join(BACKUP_DIR, filename)
-        s3_path = f'{S3_FOLDER}{filename}'
-        subject = ''
-        message = ''
+
+        self.stdout.write(self.style.WARNING("🧪 Running DRY RUN database backup (local only)..."))
 
         try:
             os.makedirs(BACKUP_DIR, exist_ok=True)
@@ -40,39 +35,10 @@ class Command(BaseCommand):
                 '-o', local_path
             ], check=True)
 
-            # Upload to S3
-            s3 = boto3.client('s3')
-            s3.upload_file(local_path, BUCKET_NAME, s3_path)
+            self.stdout.write(self.style.SUCCESS(f"✅ DRY RUN Success: Backup saved to {local_path}"))
 
-            # Clean up local backups
-            local_backups = sorted(
-                [f for f in os.listdir(BACKUP_DIR) if f.startswith('backup_') and f.endswith('.json')],
-                reverse=True
-            )
-            for old in local_backups[NUM_BACKUPS_TO_KEEP:]:
-                os.remove(os.path.join(BACKUP_DIR, old))
-
-            # Clean up S3 backups
-            s3_objects = s3.list_objects_v2(Bucket=BUCKET_NAME, Prefix=S3_FOLDER).get('Contents', [])
-            s3_backups = sorted(
-                [obj['Key'] for obj in s3_objects if obj['Key'].endswith('.json')],
-                reverse=True
-            )
-            for old_key in s3_backups[NUM_BACKUPS_TO_KEEP:]:
-                s3.delete_object(Bucket=BUCKET_NAME, Key=old_key)
-
-            subject = "✅ Database Backup Successful"
-            message = f"The backup `{filename}` was created and uploaded successfully."
+        except subprocess.CalledProcessError as e:
+            self.stderr.write(self.style.ERROR(f"❌ DRY RUN Error running dumpdata:\n{e}"))
 
         except Exception as e:
-            subject = "❌ Database Backup Failed"
-            message = f"An error occurred during backup:\n\n{traceback.format_exc()}"
-
-        # Send email notification
-        send_mail(
-            subject,
-            message,
-            settings.DEFAULT_FROM_EMAIL,
-            [settings.DEFAULT_FROM_EMAIL],
-            fail_silently=False,
-        )
+            self.stderr.write(self.style.ERROR(f"❌ DRY RUN Exception:\n{traceback.format_exc()}"))

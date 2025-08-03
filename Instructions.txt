@@ -1,3 +1,26 @@
+Push updates:
+
+Create and deploy migrations locally:
+python3 manage.py makemigrations
+python3 manage.py migrate
+
+Push changes to GitHub Repo:
+git add .
+git commit -m "Add BackupBase model for admin backup feature"
+git push origin main 
+
+Deploy Updates on Heroku
+
+Migrate Heroku site:
+heroku run --app airborne-images-12bytes python3 manage.py migrate
+
+Launch Heroku DB CLI and check  bd tables:
+heroku run --app airborne-images-12bytes python3 manage.py dbshell
+\dt
+
+
+
+
 Create a superuser for online app:
 heroku run python manage.py createsuperuser -a airborne-images-12bytes
 heroku run python manage.py createsuperuser -a skyguy-12bytes

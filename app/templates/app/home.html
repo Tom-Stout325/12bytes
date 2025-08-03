@@ -5,6 +5,7 @@
 {% block content %}
 <div class="container mt-5">
   <div class="text-center mb-5">
+        <img src="{% static 'images/logo2.png' %}" alt="FlightPlan Logo" class="img-fluid shadow-sm rounded" style="max-height: 150px;">
     <h1 class="display-5 fw-bold">Welcome to Your Dashboard</h1>
     <p class="text-muted">Choose a portal to get started</p>
   </div>
@@ -18,7 +19,7 @@
     <div class="col-12 col-md-4">
       <a href="{% url 'documents' %}" class="btn btn-outline-success btn-lg w-100 py-4 shadow d-flex align-items-center justify-content-center">
         <img src="{% static 'images/logo.png' %}" alt="Drone App" style="height: 30px;" class="me-2">
-        <span>Drone Portal</span>
+        <span>FlightPlan Portal</span>
       </a>
     </div>
     

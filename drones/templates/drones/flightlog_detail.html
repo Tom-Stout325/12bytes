@@ -1,16 +1,6 @@
 {% extends 'index.html' %}
 {% load flightplan_tags %}
 
-{% block breadcrumbs %}
-  <nav aria-label="breadcrumb" class="mb-4">
-    <ol class="breadcrumb">
-      <li class="breadcrumb-item"><a href="{% url 'drone_portal' %}">Home</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'flightlog_list' %}">Flight Logs</a></li>
-      <li class="breadcrumb-item active" aria-current="page">Flight Details</li>
-    </ol>
-  </nav>
-{% endblock %}
-
 {% block content %}
 <div class="container mt-4">
   <h2 class="mb-4">Flight Details</h2>

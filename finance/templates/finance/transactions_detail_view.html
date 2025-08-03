@@ -2,6 +2,8 @@
 {% load static %}
 {% load humanize %}
 
+{% block title %}Tramsaction Detail{% endblock %}
+
 {% block content %}
 <div class="container mt-5 mb-5">
   <!-- Logo Header -->
@@ -17,39 +19,39 @@
     <div class="card-body" style="font-size: 1.05rem;">
       <dl class="row g-3">
 
-        <dt class="col-sm-4 fw-semibold">Date</dt>
+        <dt class="col-sm-4 fw-semibold">Date:</dt>
         <dd class="col-sm-8 text-muted">{{ transaction.date }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Transaction Type</dt>
+        <dt class="col-sm-4 fw-semibold">Transaction Type:</dt>
         <dd class="col-sm-8">{{ transaction.trans_type }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Description</dt>
-        <dd class="col-sm-8">{{ transaction.transaction }}</dd>
+        <dt class="col-sm-4 fw-semibold">Category:</dt>
+        <dd class="col-sm-8">{{ transaction.sub_cat.category }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Amount</dt>
+        <dt class="col-sm-4 fw-semibold">Subcategory:</dt>
+        <dd class="col-sm-8">{{ transaction.sub_cat }}</dd>
+        
+        <dt class="col-sm-4 fw-semibold">Amount:</dt>
         <dd class="col-sm-8 text-success">${{ transaction.amount|floatformat:2|intcomma }}</dd>
 
+        <dt class="col-sm-4 fw-semibold">Description:</dt>
+        <dd class="col-sm-8">{{ transaction.transaction }}</dd>
+
         {% if transaction.sub_cat.id == 26 %}
-        <dt class="col-sm-4 fw-semibold">Deductible Amount</dt>
+        <dt class="col-sm-4 fw-semibold">Deductible Amount:</dt>
         <dd class="col-sm-8 text-info">${{ transaction.deductible_amount|floatformat:2|intcomma }} <small class="text-muted">(50% deductible)</small></dd>
         {% endif %}
 
-        <dt class="col-sm-4 fw-semibold">Category</dt>
-        <dd class="col-sm-8">{{ transaction.sub_cat.category }}</dd>
-
-        <dt class="col-sm-4 fw-semibold">Subcategory</dt>
-        <dd class="col-sm-8">{{ transaction.sub_cat }}</dd>
-
-        <dt class="col-sm-4 fw-semibold">Keyword</dt>
+        <dt class="col-sm-4 fw-semibold">Keyword:</dt>
         <dd class="col-sm-8">{{ transaction.keyword }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Invoice #</dt>
+        <dt class="col-sm-4 fw-semibold">Invoice #:</dt>
         <dd class="col-sm-8">{{ transaction.invoice_numb|default:'—' }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Team</dt>
+        <dt class="col-sm-4 fw-semibold">Team:</dt>
         <dd class="col-sm-8">{{ transaction.team|default:'—' }}</dd>
 
-        <dt class="col-sm-4 fw-semibold">Transport Type</dt>
+        <dt class="col-sm-4 fw-semibold">Transport Type:</dt>
         <dd class="col-sm-8">
           {{ transaction.get_transport_type_display }}
           {% if transaction.transport_type == 'personal_vehicle' %}
@@ -59,7 +61,7 @@
           {% endif %}
         </dd>
 
-        <dt class="col-sm-4 fw-semibold">Receipt</dt>
+        <dt class="col-sm-4 fw-semibold">Receipt:</dt>
         <dd class="col-sm-8">
           {% if transaction.receipt %}
             <div class="border rounded p-2 bg-light">

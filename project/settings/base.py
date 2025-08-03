@@ -3,13 +3,17 @@ import environ
 import os
 from django.contrib.messages import constants as messages
 
+# Set base directory first
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
+
+# Initialize environment
 env = environ.Env()
 
-BASE_DIR = Path(__file__).resolve().parent.parent.parent
-environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
-
+# Load environment variables from the correct .env file
 ENV_FILE = os.environ.get('ENV_FILE', '.env')
 environ.Env.read_env(os.path.join(BASE_DIR, ENV_FILE))
+
+
 
 SECRET_KEY = env('SECRET_KEY', default='insecure-key')
 DEBUG = env.bool('DEBUG', default=True)
@@ -26,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.humanize',
     'django.contrib.sites',
     
-    'app',  # core user/auth app used by all clients
+    'app',
 
     'crispy_bootstrap5',
     'crispy_forms',

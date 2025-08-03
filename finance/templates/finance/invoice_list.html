@@ -54,17 +54,9 @@
             </a>
           </th>
           <th>
-            <a href="?{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'direction' and key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}sort=keyword&direction={% if current_sort == 'keyword' and current_direction == 'asc' %}desc{% else %}asc{% endif %}">
-              Location
-              {% if current_sort == 'keyword' %}
-                {% if current_direction == 'asc' %}↑{% else %}↓{% endif %}
-              {% endif %}
-            </a>
-          </th>
-          <th>
-            <a href="?{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'direction' and key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}sort=service__service&direction={% if current_sort == 'service__service' and current_direction == 'asc' %}desc{% else %}asc{% endif %}">
-              Service
-              {% if current_sort == 'service__service' %}
+            <a href="?{% for key, value in request.GET.items %}{% if key != 'sort' and key != 'direction' and key != 'page' %}{{ key }}={{ value|urlencode }}&{% endif %}{% endfor %}sort=invoice_event&direction={% if current_sort == 'client__business' and current_direction == 'asc' %}desc{% else %}asc{% endif %}">
+              Event
+              {% if current_sort == 'invoice_event' %}
                 {% if current_direction == 'asc' %}↑{% else %}↓{% endif %}
               {% endif %}
             </a>
@@ -122,7 +114,6 @@
           <td>{{ invoice.invoice_numb }}</td>
           <td>{{ invoice.client }}</td>
           <td>{{ invoice.keyword }}</td>
-          <td>{{ invoice.service }}</td>
           <td>${{ invoice.amount|floatformat:2|intcomma }}</td>
           <td>{{ invoice.date }}</td>
           <td>{{ invoice.due }}</td>

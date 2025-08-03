@@ -165,3 +165,29 @@ def training_delete(request, pk):
         return redirect('profile')
     context = {'training': training, 'current_page': 'profile'}  # Breadcrumb for profile
     return render(request, 'app/training_confirm_delete.html', context)
+
+
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Help
+
+def help_getting_started(request):
+    return render(request, 'help/help_getting_started.html')
+
+
+def help_home(request):
+    return render(request, 'help/help_home.html')
+
+
+def help_pilot_profile(request):
+    return render(request, 'help/help_pilot_profile.html')
+
+
+def help_equipment(request):
+    return render(request, 'help/help_equipment.html')
+
+
+def help_flight_logs(request):
+    return render(request, 'help/help_flight_logs.html')
+
+
+def help_documents(request):
+    return render(request, 'help/help_documents.html')
