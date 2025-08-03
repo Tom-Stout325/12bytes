@@ -35,13 +35,10 @@ from .models import *
 from .forms import *
 from drones.models import Equipment
 from decimal import Decimal
-
-
+from django.db.models import F, ExpressionWrapper, DecimalField, Sum
 
 
 logger = logging.getLogger(__name__)
-
-from django.db.models import F, ExpressionWrapper, DecimalField, Sum
 
 
 class Dashboard(LoginRequiredMixin, TemplateView):
@@ -51,6 +48,7 @@ class Dashboard(LoginRequiredMixin, TemplateView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'dashboard'
         return context
+
 
 # ---------------------------------------------------------------------------------------------------------------   Transactions
 
@@ -135,7 +133,6 @@ class Transactions(LoginRequiredMixin, ListView):
         return context
 
 
-
 def get_context_data(self, **kwargs):
     context = super().get_context_data(**kwargs)
 
@@ -173,8 +170,6 @@ def get_context_data(self, **kwargs):
     return context
 
 
-
-
 class TransactionDetailView(LoginRequiredMixin, DetailView):
     model = Transaction
     template_name = 'finance/transactions_detail_view.html'
@@ -189,8 +184,6 @@ class TransactionDetailView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'transactions'
         return context
-
-
 
 
 class TransactionCreateView(LoginRequiredMixin, CreateView):
@@ -220,9 +213,6 @@ class TransactionCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'transactions'
         return context
-
-
-
 
 
 class TransactionUpdateView(LoginRequiredMixin, UpdateView):
@@ -258,8 +248,6 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
             logger.error(f"Error updating transaction {self.get_object().id} for user {self.request.user.id}: {e}")
             messages.error(self.request, 'Error updating transaction. Please check the form.')
             return self.form_invalid(form)
-        
-
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -269,12 +257,6 @@ class TransactionUpdateView(LoginRequiredMixin, UpdateView):
         if sub_cat:
             context['selected_category'] = sub_cat.category
         return context
-
-
-
-
-
-
 
 
 class TransactionDeleteView(LoginRequiredMixin, DeleteView):
@@ -305,11 +287,72 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-
 @login_required
 def add_transaction_success(request):
     context = {'current_page': 'transactions'}
     return render(request, 'transaction/transaction_add_success.html', context)
+
+
+
+class Echo:
+    def write(self, value):
+        return value
+
+class DownloadTransactionsCSV(LoginRequiredMixin, View):
+    def get(self, request):
+        try:
+            # Get base queryset
+            if request.GET.get('all') == 'true':
+                queryset = Transaction.objects.filter(user=request.user)
+            else:
+                transactions_view = Transactions()
+                transactions_view.request = request
+                queryset = transactions_view.get_queryset()
+
+            # Filter by year
+            year = request.GET.get('year')
+            if year and year.isdigit():
+                queryset = queryset.filter(date__year=int(year))
+
+            # Debug check
+            if not queryset.exists():
+                logger.warning(f"No transactions found for user {request.user} in export.")
+                return HttpResponse("No transactions to export.", status=204)
+
+            print("Transaction count:", queryset.count())
+            logger.info(f"Transaction count for {request.user}: {queryset.count()}")
+
+            # CSV generator
+            def stream_csv(queryset):
+                pseudo_buffer = Echo()
+                writer = csv.writer(pseudo_buffer)
+                yield writer.writerow(['Date', 'Type', 'Transaction', 'Location', 'Amount', 'Invoice #'])
+                for tx in queryset.iterator():
+                    yield writer.writerow([
+                        tx.date,
+                        tx.trans_type or '',
+                        tx.transaction,
+                        tx.amount,
+                        tx.invoice_numb or ''
+                    ])
+
+            # Determine filename
+            if request.GET.get('all') == 'true':
+                filename = "all_transactions.csv"
+            elif year and year.isdigit():
+                filename = f"transactions_{year}.csv"
+            else:
+                filename = "transactions.csv"
+
+            # Return streaming response
+            response = StreamingHttpResponse(stream_csv(queryset), content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="{filename}"'
+            return response
+
+        except Exception as e:
+            logger.error(f"Error generating CSV for user {request.user.id}: {e}")
+            return HttpResponse("Error generating CSV", status=500)
+
 
 
 # ---------------------------------------------------------------------------------------------------------------  Invoices
@@ -362,8 +405,6 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
             return self.form_invalid(form)
 
 
-
-
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
     model = Invoice
     form_class = InvoiceForm
@@ -393,9 +434,6 @@ class InvoiceUpdateView(LoginRequiredMixin, UpdateView):
         else:
             messages.error(self.request, "Error in invoice items. Please check the form.")
             return self.form_invalid(form)
-
-
-
 
 
 class InvoiceListView(LoginRequiredMixin, ListView):
@@ -434,7 +472,6 @@ class InvoiceListView(LoginRequiredMixin, ListView):
 
 
 
-
 class InvoiceDetailView(LoginRequiredMixin, DetailView):
     model = Invoice
     template_name = 'finance/invoice_detail.html'
@@ -454,8 +491,6 @@ class InvoiceDetailView(LoginRequiredMixin, DetailView):
         context['rendering_for_pdf'] = self.request.GET.get('pdf', False)
         context['current_page'] = 'invoices'
         return context
-
-
 
 
 class InvoiceDeleteView(LoginRequiredMixin, DeleteView):
@@ -545,6 +580,7 @@ def invoice_review(request, pk):
 
     return render(request, 'finance/invoice_review.html', context)
 
+
 @login_required
 def invoice_review_pdf(request, pk):
     invoice = get_object_or_404(Invoice, pk=pk)
@@ -625,73 +661,13 @@ def invoice_review_pdf(request, pk):
         messages.error(request, "Error generating PDF.")
         return redirect('invoice_detail', pk=pk)
 
+
     
 @login_required
 def unpaid_invoices(request):
     invoices = Invoice.objects.filter(paid__iexact="No").select_related('client').order_by('due_date')
     context = {'invoices': invoices, 'current_page': 'invoices'}
     return render(request, 'finance/unpaid_invoices.html', context)
-
-
-
-class Echo:
-    def write(self, value):
-        return value
-
-class DownloadTransactionsCSV(LoginRequiredMixin, View):
-    def get(self, request):
-        try:
-            # Get base queryset
-            if request.GET.get('all') == 'true':
-                queryset = Transaction.objects.filter(user=request.user)
-            else:
-                transactions_view = Transactions()
-                transactions_view.request = request
-                queryset = transactions_view.get_queryset()
-
-            # Filter by year
-            year = request.GET.get('year')
-            if year and year.isdigit():
-                queryset = queryset.filter(date__year=int(year))
-
-            # Debug check
-            if not queryset.exists():
-                logger.warning(f"No transactions found for user {request.user} in export.")
-                return HttpResponse("No transactions to export.", status=204)
-
-            print("Transaction count:", queryset.count())
-            logger.info(f"Transaction count for {request.user}: {queryset.count()}")
-
-            # CSV generator
-            def stream_csv(queryset):
-                pseudo_buffer = Echo()
-                writer = csv.writer(pseudo_buffer)
-                yield writer.writerow(['Date', 'Type', 'Transaction', 'Location', 'Amount', 'Invoice #'])
-                for tx in queryset.iterator():
-                    yield writer.writerow([
-                        tx.date,
-                        tx.trans_type or '',
-                        tx.transaction,
-                        tx.amount,
-                        tx.invoice_numb or ''
-                    ])
-
-            # Determine filename
-            if request.GET.get('all') == 'true':
-                filename = "all_transactions.csv"
-            elif year and year.isdigit():
-                filename = f"transactions_{year}.csv"
-            else:
-                filename = "transactions.csv"
-
-            # Return streaming response
-            response = StreamingHttpResponse(stream_csv(queryset), content_type='text/csv')
-            response['Content-Disposition'] = f'attachment; filename="{filename}"'
-            return response
-
-        except Exception as e:
-            logger.error(f"Error generating CSV for user {request.user.id}: {e}")
-            return HttpResponse("Error generating CSV", status=500)
 
 
 @login_required
@@ -757,7 +733,6 @@ def export_invoices_pdf(request):
 
 
 # ---------------------------------------------------------------------------------------------------------------  Categories
-
 
 
 class CategoryListView(LoginRequiredMixin, ListView):
@@ -830,7 +805,6 @@ class CategoryDeleteView(LoginRequiredMixin, DeleteView):
         return context
 
 
-
 @login_required
 def category_summary(request):
     year = request.GET.get('year')
@@ -839,7 +813,6 @@ def category_summary(request):
         user=request.user).dates('date', 'year', order='DESC').distinct()]
     context['current_page'] = 'reports'
     return render(request, 'finance/category_summary.html', context)
-
 
 
 @login_required
@@ -1088,15 +1061,12 @@ def get_summary_data(request, year):
 
 
 
-
-
 @login_required
 def financial_statement(request):
     year = request.GET.get('year', str(timezone.now().year))
     context = get_summary_data(request, year)
     context['current_page'] = 'reports'
     return render(request, 'finance/financial_statement.html', context)
-
 
 
 @login_required
@@ -1116,7 +1086,6 @@ def financial_statement_pdf(request, year):
     response['Content-Disposition'] = f'attachment; filename="Financial_Statement_{selected_year}.pdf"'
 
     return response
-
 
 
 def get_schedule_c_summary(transactions):
@@ -1141,7 +1110,6 @@ def get_schedule_c_summary(transactions):
         for line, data in sorted(line_summary.items())
     ]
 
-    
     
     
 @login_required
@@ -1249,7 +1217,6 @@ def form_4797_pdf(request):
     response = HttpResponse(pdf, content_type='application/pdf')
     response['Content-Disposition'] = f'{disposition}; filename="form_4797.pdf"'
     return response
-
 
 
 @login_required
@@ -1451,7 +1418,6 @@ def travel_expense_analysis_pdf(request):
     return response
 
 
-
 @login_required
 def race_expense_report_pdf(request):
     current_year = now().year
@@ -1516,7 +1482,6 @@ def reports_page(request):
 
 # ---------------------------------------------------------------------------------------------------------------   Emails
 
-logger = logging.getLogger(__name__)
 
 @require_POST
 def send_invoice_email(request, invoice_id):
@@ -1601,8 +1566,6 @@ def mileage_log(request):
     return render(request, 'finance/mileage_log.html', context)
 
 
-
-
 class MileageCreateView(LoginRequiredMixin, CreateView):
     model = Miles
     form_class = MileageForm
@@ -1618,8 +1581,6 @@ class MileageCreateView(LoginRequiredMixin, CreateView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'mileage'
         return context
-
-
 
 
 class MileageUpdateView(LoginRequiredMixin, UpdateView):
@@ -1641,8 +1602,6 @@ class MileageUpdateView(LoginRequiredMixin, UpdateView):
         return context
 
 
-
-
 class MileageDeleteView(LoginRequiredMixin, DeleteView):
     model = Miles
     template_name = 'finance/mileage_confirm_delete.html'
@@ -1659,7 +1618,6 @@ class MileageDeleteView(LoginRequiredMixin, DeleteView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'mileage'
         return context
-
 
 
 
@@ -1694,7 +1652,6 @@ class KeywordListView(LoginRequiredMixin, ListView):
         return context
 
 
-
 class KeywordCreateView(LoginRequiredMixin, CreateView):
     model = Keyword
     form_class = KeywordForm
@@ -1711,7 +1668,6 @@ class KeywordCreateView(LoginRequiredMixin, CreateView):
         return context
 
 
-
 class KeywordUpdateView(LoginRequiredMixin, UpdateView):
     model = Keyword
     form_class = KeywordForm
@@ -1726,7 +1682,6 @@ class KeywordUpdateView(LoginRequiredMixin, UpdateView):
         context = super().get_context_data(**kwargs)
         context['current_page'] = 'keywords'
         return context
-
 
 
 class KeywordDeleteView(LoginRequiredMixin, DeleteView):
@@ -1907,4 +1862,33 @@ def run_monthly_recurring_view(request):
 
 
 
+# ---------------------------------------------------------------------------------------------------------------  Receipts
 
+
+@login_required
+def receipts_list(request):
+    query = request.GET.get('search', '')
+    receipts = Transaction.objects.filter(user=request.user, receipt__isnull=False)
+
+    if query:
+        receipts = receipts.filter(
+            Q(invoice_numb__icontains=query) |
+            Q(transaction__icontains=query)
+        )
+
+    receipts = receipts.order_by('-date')
+    paginator = Paginator(receipts, 20)
+    page_obj = paginator.get_page(request.GET.get('page'))
+
+    context = {
+        'receipts': page_obj.object_list,
+        'page_obj': page_obj,
+        'request': request,
+    }
+    return render(request, 'finance/receipts_list.html', context)
+
+
+@login_required
+def receipt_detail(request, pk):
+    receipt = get_object_or_404(Transaction, pk=pk, user=request.user, receipt__isnull=False)
+    return render(request, 'finance/receipt_detail.html', {'receipt': receipt})

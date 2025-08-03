@@ -235,6 +235,7 @@ class Miles(models.Model):
         super().save(*args, **kwargs)
 
 
+
 class RecurringTransaction(models.Model):
     INCOME = 'Income'
     EXPENSE = 'Expense'
@@ -264,3 +265,18 @@ class RecurringTransaction(models.Model):
     class Meta:
         indexes = [models.Index(fields=['user', 'day', 'active'])]
 
+
+
+class Receipt(models.Model):
+    transaction = models.ForeignKey(Transaction, on_delete=models.CASCADE, related_name='receipts')
+    date = models.DateField(blank=True, null=True)
+    amount = models.DecimalField(max_digits=20, decimal_places=2, blank=True, null=True)
+    keyword = models.ForeignKey('Keyword', null=True, blank=True, on_delete=models.SET_NULL)
+    invoice_number = models.CharField(max_length=255, blank=True, null=True)
+    receipt_file = models.FileField(upload_to='receipts/', blank=True, null=True)
+
+    class Meta:
+        ordering = ['-date']
+
+    def __str__(self):
+        return f"Receipt: {self.transaction.transaction} - {self.amount or 'No Amount'}"

@@ -60,7 +60,9 @@ urlpatterns = [
     path('form-4797/', form_4797_view, name='form_4797'),
     path('form-4797/pdf/', form_4797_pdf, name='form_4797_pdf'),
 
-
+    path('receipts/', receipts_list, name='receipts_list'),
+    path('receipts/<int:pk>/', receipt_detail, name='receipt_detail'),
+    
     # Mileage
     path('mileage-log/', mileage_log, name='mileage_log'),
     path('mileage/add/', MileageCreateView.as_view(), name='mileage_create'),

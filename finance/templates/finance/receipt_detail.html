@@ -1,0 +1,32 @@
+{% extends "index.html" %}
+{% load static %}
+{% load humanize %}
+
+{% block title %}Receipt Detail{% endblock %}
+
+{% block content %}
+<div class="container bg-light p-4 rounded border shadow-sm">
+  <h2 class="text-center mb-4">Receipt Detail</h2>
+  <hr class="w-50 mx-auto">
+
+  <div class="mb-3 text-center">
+    {% if receipt.receipt %}
+      <img src="{{ receipt.receipt.url }}" alt="Receipt Preview" class="img-fluid rounded shadow-sm" style="max-height: 400px;">
+    {% else %}
+      <p class="text-muted">No receipt uploaded for this transaction.</p>
+    {% endif %}
+  </div>
+
+  <table class="table table-striped">
+    <tr><th>Transaction</th><td>{{ receipt.transaction }}</td></tr>
+    <tr><th>Amount</th><td>${{ receipt.amount|floatformat:2|intcomma }}</td></tr>
+    <tr><th>Date</th><td>{{ receipt.date }}</td></tr>
+    <tr><th>Keyword</th><td>{{ receipt.keyword }}</td></tr>
+    <tr><th>Invoice Number</th><td>{{ receipt.invoice_numb }}</td></tr>
+  </table>
+
+  <div class="text-center mt-4">
+    <a href="{% url 'receipts_list' %}" class="btn btn-secondary">Back to Receipts</a>
+  </div>
+</div>
+{% endblock %}

@@ -26,7 +26,7 @@
           </form>
       </div>
       <div class="col-lg-4 col-md-2 col-12 mt-3 mt-md-0 text-center">
-          <a href="{% url 'add_receipt' %}" class="btn btn-info w-100">
+          <a href="" class="btn btn-info w-100">
               <i class="fas fa-plus"></i> Create A New Receipt
           </a>
       </div>
@@ -37,28 +37,29 @@
     <table class="table table-hover">
       <thead>
         <tr class="table-primary text-nowrap text-center">
+          <th>Date</th>
           <th>Invoice #</th>
           <th>Transaction</th>
           <th>Amount</th>
-          <th>Date</th>
           <th class="text-center">Actions</th>
          
         </tr>
       </thead>
       <tbody>
         {% for receipt in receipts %}
-        <tr class="text-center invoice-row">
-          <td>{{receipt.transaction.invoice_numb }}</td>
-          <td>{{ receipt.description }}</td>
-          <td>$ {{ receipt.amount|floatformat:2|intcomma }}</td>
-          <td>{{ receipt.date }}</td>
-          <td>
-            <a href="{% url 'receipt_detail' receipt.pk %}"><i class="fa-solid fa-eye"></i>&nbsp;</a>
-            <a href="{% url 'receipt_edit' invoice.pk %}"><i class="fa-solid fa-pencil"></i>&nbsp;</a>
-            <a href="{% url 'receipt_review' receipt.pk %}"><i class="fa-regular fa-file"></i>&nbsp;</a>
-          
-          </td>
-        </tr>
+          <tr class="text-center invoice-row">
+            <td>{{ receipt.date }}</td>
+            <td>{{receipt.transaction.invoice_numb }}</td>
+            <td>{{ receipt.description }}</td>
+            <td>$ {{ receipt.amount|floatformat:2|intcomma }}</td>
+            <td>
+              <a href=""><i class="fa-solid fa-eye"></i>&nbsp;</a>
+              <a href="{% url 'receipt_detail' receipt.pk %}"><i class="fa-solid fa-pencil"></i>&nbsp;</a>
+              <a href=""><i class="fa-regular fa-file"></i>&nbsp;</a>
+         
+              <a href=""><i class="fa-regular fa-file"></i>&nbsp;</a>
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
