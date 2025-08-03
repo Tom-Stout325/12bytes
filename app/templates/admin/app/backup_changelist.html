@@ -1,0 +1,40 @@
+{% extends "admin/change_list.html" %}
+{% load static %}
+
+{% block content %}
+<h2>Database Backups</h2>
+
+<div class="mb-3">
+  <a href="{% url 'admin:create-backup' %}" class="button btn btn-success">📦 Create Backup</a>
+  <a href="{% url 'admin:delete-old-backups' %}" class="button btn btn-danger">🗑 Delete Old Backups</a>
+</div>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Filename</th>
+      <th>Timestamp</th>
+      <th>Size (KB)</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for b in backups %}
+    <tr>
+      <td>{{ b.filename }}</td>
+      <td>{{ b.timestamp }}</td>
+      <td>{{ b.size_kb }}</td>
+      <td>
+        <a href="{% url 'admin:restore-backup' b.filename %}" class="btn btn-warning btn-sm">Restore</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
+
+{% block extrahead %}
+<style>
+  .btn { margin-right: 5px; }
+</style>
+{% endblock %}

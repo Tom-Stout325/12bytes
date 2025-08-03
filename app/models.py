@@ -3,6 +3,37 @@ from django.contrib.auth.models import User
 from django.utils.timezone import now
 from drones.models import FlightLog
 
+from dataclasses import dataclass
+
+
+# A real (non-abstract) base model for the proxy
+class BackupBase(models.Model):
+    dummy = models.BooleanField(default=False)  # required to make it concrete
+
+    class Meta:
+        db_table = 'backup_base'  # optional, but avoids table name conflicts
+
+# Proxy model
+class BackupProxy(BackupBase):
+    class Meta:
+        proxy = True
+        verbose_name = "Database Backup"
+        verbose_name_plural = "Database Backups"
+
+    def __str__(self):
+        return "Backup Tool"
+
+# Used only in admin logic for parsing backup files
+@dataclass
+class Backup:
+    filename: str
+    size_kb: float
+    timestamp: str
+    location: str
+
+
+
+
 
 def training_certificate_upload_path(instance, filename):
     return f"training_certificates/{instance.pilot.user.username}/{filename}"

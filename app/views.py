@@ -8,6 +8,64 @@ from .forms import *
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 
+
+from django.contrib import admin
+from django.urls import path
+from django.shortcuts import redirect, render
+from django.contrib import messages
+from django.conf import settings
+import boto3, os
+from .models import Backup
+from datetime import datetime
+
+class BackupAdmin(admin.ModelAdmin):
+    change_list_template = "admin/finance/backup_changelist.html"
+
+    def get_urls(self):
+        urls = super().get_urls()
+        custom_urls = [
+            path('backup/', self.admin_site.admin_view(self.create_backup), name='create-backup'),
+            path('restore/<str:filename>/', self.admin_site.admin_view(self.restore_backup), name='restore-backup'),
+            path('delete_old/', self.admin_site.admin_view(self.delete_old_backups), name='delete-old-backups'),
+        ]
+        return custom_urls + urls
+
+    def create_backup(self, request):
+        from django.core.management import call_command
+        try:
+            call_command("backup_db")
+            self.message_user(request, "✅ Backup created successfully!", level=messages.SUCCESS)
+        except Exception as e:
+            self.message_user(request, f"❌ Backup failed: {e}", level=messages.ERROR)
+        return redirect("..")
+
+    def restore_backup(self, request, filename):
+        from django.core.management import call_command
+        try:
+            call_command("restore_db_safe", filename, "--s3")
+            self.message_user(request, f"✅ Backup `{filename}` restored successfully!", level=messages.SUCCESS)
+        except Exception as e:
+            self.message_user(request, f"❌ Restore failed: {e}", level=messages.ERROR)
+        return redirect("..")
+
+    def delete_old_backups(self, request):
+        s3 = boto3.client('s3')
+        bucket = settings.AWS_STORAGE_BUCKET_NAME
+        prefix = "backups/"
+        max_keep = 3
+
+        objects = s3.list_objects_v2(Bucket=bucket, Prefix=prefix).get('Contents', [])
+        backups = sorted([obj['Key'] for obj in objects if obj['Key'].endswith('.json')])
+        to_delete = backups[:-max_keep]
+
+        for key in to_delete:
+            s3.delete_object(Bucket=bucket, Key=key)
+
+        self.message_user(request, f"🗑 Deleted {len(to_delete)} old backups from S3", level=messages.SUCCESS)
+        return redirect("..")
+
+
+
 @login_required
 def home(request):
     context = {'current_page': 'home'}  # Breadcrumb for home
