@@ -688,6 +688,10 @@ def flight_map_view(request):
 
 # PUBLIC VIEW FOR WEBSITE <------
 
+def extract_state(address):
+    match = re.search(r",\s*([A-Z]{2})[, ]", address or "")
+    return match.group(1) if match else None
+
 def flight_map_embed(request):
     locations_qs = (
         FlightLog.objects
@@ -713,3 +717,4 @@ def flight_map_embed(request):
         'num_cities': len(cities),
     }
     return render(request, 'drones/map_embed.html', context)
+

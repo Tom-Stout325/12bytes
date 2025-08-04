@@ -105,6 +105,7 @@ urlpatterns = [
     path('map/', flight_map_view, name='flight_map'),
     path("map/embed/", flight_map_embed, name="flight_map_embed")
 
+
 ]
 
 
