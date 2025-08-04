@@ -23,7 +23,7 @@ import re
 from .forms import *
 from .models import *
 from datetime import timedelta
-
+from django.db.models import Count
 
 
 @login_required
@@ -420,14 +420,30 @@ def equipment_pdf_single(request, pk):
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- FlightLog Views
 
 
+
 @login_required
 def flightlog_list(request):
-    log_list = FlightLog.objects.all().order_by('-flight_date')
+    location_filter = request.GET.get('location', '').strip()
+    log_list = FlightLog.objects.all()
+
+    if location_filter:
+        log_list = log_list.filter(
+            Q(takeoff_address__icontains=location_filter) |
+            Q(takeoff_latlong__icontains=location_filter)
+        )
+
+    log_list = log_list.order_by('-flight_date')
     paginator = Paginator(log_list, 50)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {'logs': page_obj, 'current_page': 'flightlogs'}  
+
+    context = {
+        'logs': page_obj,
+        'current_page': 'flightlogs',
+        'location_filter': location_filter,
+    }
     return render(request, 'drones/flightlog_list.html', context)
+
 
 
 @login_required
@@ -516,86 +532,6 @@ def safe_int(value):
         return None
 
 
-# @login_required
-# def upload_flightlog_csv(request):
-#     if request.method == 'POST':
-#         form = FlightLogCSVUploadForm(request.POST, request.FILES)
-#         if form.is_valid():
-#             file = form.cleaned_data['csv_file']
-#             decoded = file.read().decode('utf-8-sig').splitlines()
-#             reader = csv.DictReader(decoded)
-#             reader.fieldnames = [field.replace('\ufeff', '').strip() for field in reader.fieldnames]
-#             for row in reader:
-#                 row = {k.strip(): (v.strip() if v else "") for k, v in row.items()}
-#                 if not row.get("Flight/Service Date"):
-#                     print("Skipping row: missing Flight/Service Date")
-#                     continue
-
-#                 # Parse date/time
-#                 try:
-#                     clean_dt = re.sub(r'(\d+)(st|nd|rd|th)', r'\1', row["Flight/Service Date"])
-#                     dt = datetime.strptime(clean_dt, "%b %d, %Y %I:%M%p")
-#                     flight_date = dt.date()
-#                     landing_time = dt.time()
-#                 except Exception as e:
-#                     print("Skipping row: invalid date format", e)
-#                     continue
-
-#                 try:
-#                     air_seconds = safe_int(row.get("Air Seconds")) or 0
-#                     air_time = timedelta(seconds=air_seconds)
-
-#                     FlightLog.objects.create(
-#                         flight_date=flight_date,
-#                         flight_title=row.get("Flight Title", ""),
-#                         flight_description=row.get("Flight Description", ""),
-#                         pilot_in_command=row.get("Pilot-in-Command", ""),
-#                         license_number=row.get("License Number", ""),
-#                         takeoff_latlong=row.get("Takeoff Lat/Long", ""),
-#                         takeoff_address=row.get("Takeoff Address", ""),
-#                         landing_time=landing_time,
-#                         air_time=air_time,
-#                         above_sea_level_ft=safe_float(row.get("Above Sea Level (Feet)")),
-#                         drone_name=row.get("Drone Name", ""),
-#                         drone_type=row.get("Drone Type", ""),
-#                         drone_serial=row.get("Drone Serial Number", ""),
-#                         battery_name=row.get("Battery Name", ""),
-#                         battery_serial_printed=row.get("Bat Printed Serial", ""),
-#                         battery_serial_internal=row.get("Bat Internal Serial", ""),
-#                         landing_battery_pct=safe_int(row.get("Landing Bat %").replace("%", "")),
-#                         landing_mah=safe_int(row.get("Landing mAh")),
-#                         landing_volts=safe_float(row.get("Landing Volts")),
-#                         max_altitude_ft=safe_float(row.get("Max Altitude (Feet)")),
-#                         max_distance_ft=safe_float(row.get("Max Distance (Feet)")),
-#                         max_speed_mph=safe_float(row.get("Max Speed (mph)")),
-#                         total_mileage_ft=safe_float(row.get("Total Mileage (Feet)")),
-#                         avg_wind=safe_float(row.get("Avg Wind")),
-#                         max_gust=safe_float(row.get("Max Gust")),
-#                         ground_weather_summary=row.get("Ground Weather Summary", ""),
-#                         ground_temp_f=safe_float(row.get("Ground Temperature (f)")),
-#                         visibility_miles=safe_float(row.get("Ground Visibility (Miles)")),
-#                         wind_speed=safe_float(row.get("Ground Wind Speed")),
-#                         wind_direction=row.get("Ground Wind Direction", ""),
-#                         cloud_cover=row.get("Cloud Cover", "").replace("%", ""),
-#                         signal_losses=safe_int(row.get("Signal Losses (>1 sec)")),
-#                         photos=safe_int(row.get("Photos")),
-#                         videos=safe_int(row.get("Videos")),
-#                         notes=row.get("Add Additional Notes", ""),
-#                         tags=row.get("Tags", ""),
-#                     )
-#                 except Exception as e:
-#                     print("Row error:", e, row)
-#                     continue
-#             return redirect('flightlog_list')
-#     else:
-#         form = FlightLogCSVUploadForm()
-
-#     context = {'form': form, 'current_page': 'flightlogs'}  
-#     return render(request, 'drones/upload_log.html', context)
-
-
-
-
 
 def safe_int(val):
     try:
@@ -608,6 +544,7 @@ def safe_float(val):
         return float(val)
     except:
         return None
+
 
 @login_required
 def upload_flightlog_csv(request):
@@ -704,9 +641,75 @@ def upload_flightlog_csv(request):
                 except Exception as e:
                     print("Row error:", e, row)
                     continue
-
+            
+    
             return redirect('flightlog_list')
-    else:
         form = FlightLogCSVUploadForm()
 
-    return render(request, 'drones/upload_log.html', {'form': form, 'current_page': 'flightlogs'})
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- M A P S
+
+def extract_state(address):
+    """Try to pull the 2-letter state abbreviation from address like 'City, ST, USA'"""
+    match = re.search(r",\s*([A-Z]{2})[, ]", address or "")
+    return match.group(1) if match else None
+
+def flight_map_view(request):
+    logs = FlightLog.objects.all().order_by('-flight_date')[:100]  # limit if needed
+    locations_qs = (
+        FlightLog.objects
+        .values('takeoff_latlong', 'takeoff_address')
+        .annotate(count=Count('id'))
+        .exclude(takeoff_latlong__exact="")
+        .order_by('takeoff_address')
+    )
+    locations = list(locations_qs)
+
+    # Extract unique states from address
+    states = set()
+    cities = set()
+    for loc in locations:
+        addr = loc.get("takeoff_address", "")
+        if addr:
+            cities.add(addr.strip())
+            state = extract_state(addr)
+            if state:
+                states.add(state)
+
+    context = {
+        'locations': locations,
+        'num_states': len(states),
+        'num_cities': len(cities),
+        'logs': logs,
+    }
+    return render(request, 'drones/map.html', context)
+
+
+# PUBLIC VIEW FOR WEBSITE <------
+
+def flight_map_embed(request):
+    locations_qs = (
+        FlightLog.objects
+        .values('takeoff_latlong', 'takeoff_address')
+        .annotate(count=Count('id'))
+        .exclude(takeoff_latlong__exact="")
+    )
+    locations = list(locations_qs)
+
+    states = set()
+    cities = set()
+    for loc in locations:
+        addr = loc.get("takeoff_address", "")
+        if addr:
+            cities.add(addr.strip())
+            state = extract_state(addr)
+            if state:
+                states.add(state)
+
+    context = {
+        'locations': locations,
+        'num_states': len(states),
+        'num_cities': len(cities),
+    }
+    return render(request, 'drones/map_embed.html', context)

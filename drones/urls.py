@@ -37,6 +37,10 @@ from .views import (
     flightlog_delete,
     flightlog_pdf,
     export_flightlogs_csv,
+    
+    # Map
+    flight_map_view,
+    flight_map_embed,
 )
 
 from .forms import (
@@ -95,6 +99,12 @@ urlpatterns = [
     path('flightlogs/<int:pk>/delete/', flightlog_delete, name='flightlog_delete'),
     path('flightlogs/<int:pk>/pdf/', flightlog_pdf, name='flightlog_pdf'),
     path('flightlogs/export/csv/', export_flightlogs_csv, name='export_flightlogs_csv'),
+    
+    
+    # flight maps
+    path('map/', flight_map_view, name='flight_map'),
+    path("map/embed/", flight_map_embed, name="flight_map_embed")
+
 ]
 
 
