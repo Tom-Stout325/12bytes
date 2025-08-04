@@ -25,6 +25,8 @@ from .models import *
 from datetime import timedelta
 from django.db.models import Count
 
+from django.utils.decorators import method_decorator
+from django.views.decorators.clickjacking import xframe_options_exempt
 
 @login_required
 def drone_portal(request):
@@ -687,7 +689,7 @@ def flight_map_view(request):
 
 
 # PUBLIC VIEW FOR WEBSITE <------
-
+@xframe_options_exempt
 def extract_state(address):
     match = re.search(r",\s*([A-Z]{2})[, ]", address or "")
     return match.group(1) if match else None
