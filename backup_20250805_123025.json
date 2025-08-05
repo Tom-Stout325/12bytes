@@ -1,0 +1,855 @@
+[
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "app",
+    "model": "backupbase"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "app",
+    "model": "backupproxy"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "admin",
+    "model": "logentry"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "permission"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "group"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "auth",
+    "model": "user"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "contenttypes",
+    "model": "contenttype"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sessions",
+    "model": "session"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "sites",
+    "model": "site"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "app",
+    "model": "pilotprofile"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "app",
+    "model": "training"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "category"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "client"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "invoice"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "keyword"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "mileagerate"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "service"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "subcategory"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "team"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "recurringtransaction"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "miles"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "invoiceitem"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "transaction"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "drones",
+    "model": "droneincidentreport"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "drones",
+    "model": "equipment"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "drones",
+    "model": "flightlog"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "drones",
+    "model": "generaldocument"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "drones",
+    "model": "sopdocument"
+  }
+},
+{
+  "model": "contenttypes.contenttype",
+  "fields": {
+    "app_label": "finance",
+    "model": "receipt"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ed9iz5yf3r1dl8kknnt0ggi7a2b3jt5x",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2RC2pVA8evcNZJddpWogKe3J-HdD0oNeZybzVhH3Lce9yRoXVmcF6vTLCNNTShf8wHKvOtWyrQvpnujDNn2tLK_L0f4NMrbct5SAfQKLYWawPFhnAAYJEzKI8WYcKaVgSfxkaDRMhHAzMyM5FBfU5wvfXDg4:1uiS7J:fpYwF1oGbSESmDqfNFsCgmb7rGqcDgFMK-frX3-Ml3g",
+    "expire_date": "2025-08-10T06:22:45.791Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "ixlyskpaolxf616n62e8vjp6672ni57f",
+  "fields": {
+    "session_data": ".eJxVjM0OgjAQhN-lZ0JaQf6O3n2GZre7SJUU05ZoJLy7IMTobWa-yTcJDWPs9BjYa0uiEUokvxuCubFbAV3BXYbUDC56i-l6SXca0vNA3J_275-gg9CtWjSKSqNyqCtSOR3yQip14PoIpFiWMsvQmDpHLo8SM0mIoFpZEWABXNSL9GFf4ElbZyyxi9rzffBRb7NoJhEi30Xjxr5PPlkTRFjAvNfW9hy2zs_o4cvn-Q2uN1re:1ujJig:GAsNfqj-648Ea7UDnFWkWtzWsSFFpVulgTaJFRiADUo",
+    "expire_date": "2025-08-12T15:36:54.645Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "uhz6hwh5ededu874sufl5wguqh4xhtgj",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2RC2pVA8evcNZJddpWogKe3J-HdD0oNeZybzVhH3Lce9yRoXVmcF6vTLCNNTShf8wHKvOtWyrQvpnujDNn2tLK_L0f4NMrbct5SAfQKLYWawPFhnAAYJEzKI8WYcKaVgSfxkaDRMhHAzMyM5FBfU5wvfXDg4:1uiRCX:yM_Ej5EgZ2iFDhMzZJPqNO-MISK9TmE1rintrIUljmY",
+    "expire_date": "2025-08-10T05:24:05.227Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "xut7xvsgde4lhpqg35ww2dy7unyvi43k",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2RC2pVA8evcNZJddpWogKe3J-HdD0oNeZybzVhH3Lce9yRoXVmcF6vTLCNNTShf8wHKvOtWyrQvpnujDNn2tLK_L0f4NMrbct5SAfQKLYWawPFhnAAYJEzKI8WYcKaVgSfxkaDRMhHAzMyM5FBfU5wvfXDg4:1uiRHH:LWeGpf5dhSSJxH0xf6pdGR59schSj9Ad5Z7RvL5qh7I",
+    "expire_date": "2025-08-10T05:28:59.335Z"
+  }
+},
+{
+  "model": "sessions.session",
+  "pk": "yc4wf7xnqmx1cfzi14sxinzm6pmoj39c",
+  "fields": {
+    "session_data": ".eJxVjEEOwiAQAP_C2RC2pVA8evcNZJddpWogKe3J-HdD0oNeZybzVhH3Lce9yRoXVmcF6vTLCNNTShf8wHKvOtWyrQvpnujDNn2tLK_L0f4NMrbct5SAfQKLYWawPFhnAAYJEzKI8WYcKaVgSfxkaDRMhHAzMyM5FBfU5wvfXDg4:1uiQqT:IOaVeMOCc6-oa-fDWFLd_LyZnfo0hQzsEUHf9NN-EFA",
+    "expire_date": "2025-08-10T05:01:17.000Z"
+  }
+},
+{
+  "model": "sites.site",
+  "fields": {
+    "domain": "example.com",
+    "name": "example.com"
+  }
+},
+{
+  "model": "app.training",
+  "pk": 1,
+  "fields": {
+    "pilot": 1,
+    "title": "2025 Recertification",
+    "date_completed": "2025-01-15",
+    "required": true,
+    "certificate": "training_certificates/tomstout/2025Jan1455014515.pdf"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 1,
+  "fields": {
+    "category": "Travel & Meals: Travel",
+    "schedule_c_line": "24b"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 2,
+  "fields": {
+    "category": "Other Expenses",
+    "schedule_c_line": "27a"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 3,
+  "fields": {
+    "category": "Gross Receipts",
+    "schedule_c_line": "1"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 4,
+  "fields": {
+    "category": "Utilities",
+    "schedule_c_line": "25"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 5,
+  "fields": {
+    "category": "Insurance",
+    "schedule_c_line": "15"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 6,
+  "fields": {
+    "category": "Advertising",
+    "schedule_c_line": "8"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 7,
+  "fields": {
+    "category": "Repairs & Maintenance",
+    "schedule_c_line": "21"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 8,
+  "fields": {
+    "category": "Supplies",
+    "schedule_c_line": "22"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 9,
+  "fields": {
+    "category": "Contract Labor",
+    "schedule_c_line": "11"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 10,
+  "fields": {
+    "category": "Equipment Sale",
+    "schedule_c_line": null
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 11,
+  "fields": {
+    "category": "Rent or Lease: Other Business Property",
+    "schedule_c_line": "20b"
+  }
+},
+{
+  "model": "finance.category",
+  "pk": 12,
+  "fields": {
+    "category": "Travel and Meals: Deductible Meals",
+    "schedule_c_line": "24a"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 1,
+  "fields": {
+    "sub_cat": "Other Travel",
+    "category": 1,
+    "slug": "other-travel"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 2,
+  "fields": {
+    "sub_cat": "Office Equipment",
+    "category": 2,
+    "slug": "office-equipment"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 3,
+  "fields": {
+    "sub_cat": "Photography Services",
+    "category": 3,
+    "slug": "photography-services"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 4,
+  "fields": {
+    "sub_cat": "Car Rental",
+    "category": 1,
+    "slug": "car-rental"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 5,
+  "fields": {
+    "sub_cat": "Hotels",
+    "category": 1,
+    "slug": "hotels"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 6,
+  "fields": {
+    "sub_cat": "Cellular Service",
+    "category": 4,
+    "slug": "cellular-service"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 7,
+  "fields": {
+    "sub_cat": "Education",
+    "category": 2,
+    "slug": "education"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 8,
+  "fields": {
+    "sub_cat": "Software",
+    "category": 2,
+    "slug": "software"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 9,
+  "fields": {
+    "sub_cat": "Web Hosting",
+    "category": 2,
+    "slug": "web-hosting"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 10,
+  "fields": {
+    "sub_cat": "Business Insurance",
+    "category": 5,
+    "slug": "business-insurance"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 11,
+  "fields": {
+    "sub_cat": "Drone Services",
+    "category": 3,
+    "slug": "drone-services"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 12,
+  "fields": {
+    "sub_cat": "Drone Equipment",
+    "category": 2,
+    "slug": "drone-equipment"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 13,
+  "fields": {
+    "sub_cat": "Aviation Insurancve",
+    "category": 5,
+    "slug": "aviation-insurancve"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 14,
+  "fields": {
+    "sub_cat": "Meals",
+    "category": 12,
+    "slug": "meals"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 15,
+  "fields": {
+    "sub_cat": "Airfare",
+    "category": 1,
+    "slug": "airfare"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 16,
+  "fields": {
+    "sub_cat": "Fuel",
+    "category": 1,
+    "slug": "fuel"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 17,
+  "fields": {
+    "sub_cat": "Registrations",
+    "category": 2,
+    "slug": "registrations"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 18,
+  "fields": {
+    "sub_cat": "Advertising",
+    "category": 6,
+    "slug": "advertising"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 19,
+  "fields": {
+    "sub_cat": "Photography Equipment",
+    "category": 2,
+    "slug": "photography-equipment"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 20,
+  "fields": {
+    "sub_cat": "Drone Repairs",
+    "category": 7,
+    "slug": "drone-repairs"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 21,
+  "fields": {
+    "sub_cat": "Bank Fees",
+    "category": 2,
+    "slug": "bank-fees"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 22,
+  "fields": {
+    "sub_cat": "Other",
+    "category": 2,
+    "slug": "other"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 24,
+  "fields": {
+    "sub_cat": "Computer Equipment",
+    "category": 2,
+    "slug": "computer-equipment"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 25,
+  "fields": {
+    "sub_cat": "Photography Supplies",
+    "category": 8,
+    "slug": "photography-supplies"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 27,
+  "fields": {
+    "sub_cat": "Contractors",
+    "category": 9,
+    "slug": "contractors"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 28,
+  "fields": {
+    "sub_cat": "Mobile Internet",
+    "category": 4,
+    "slug": "mobile-internet"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 29,
+  "fields": {
+    "sub_cat": "Drone Equipment Sale",
+    "category": 10,
+    "slug": "drone-equipment-sale"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 30,
+  "fields": {
+    "sub_cat": "Photography Equipment Sale",
+    "category": 10,
+    "slug": "photography-equipment-sale"
+  }
+},
+{
+  "model": "finance.subcategory",
+  "pk": 31,
+  "fields": {
+    "sub_cat": "Drone Equipment Rental",
+    "category": 11,
+    "slug": "drone-equipment-rental"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 1,
+  "fields": {
+    "name": "Norwalk"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 2,
+  "fields": {
+    "name": "Sonoma"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 3,
+  "fields": {
+    "name": "Brainerd"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 4,
+  "fields": {
+    "name": "Reading"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 5,
+  "fields": {
+    "name": "St Louis"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 6,
+  "fields": {
+    "name": "Charlotte II"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 7,
+  "fields": {
+    "name": "Dallas"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 8,
+  "fields": {
+    "name": "Bristol"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 9,
+  "fields": {
+    "name": "Gainesville"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 10,
+  "fields": {
+    "name": "Phoenix"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 11,
+  "fields": {
+    "name": "Pomona I"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 12,
+  "fields": {
+    "name": "Vegas II"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 13,
+  "fields": {
+    "name": "Vegas I"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 14,
+  "fields": {
+    "name": "Pomona II"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 15,
+  "fields": {
+    "name": "Richmond"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 16,
+  "fields": {
+    "name": "Denver"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 17,
+  "fields": {
+    "name": "Indy"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 18,
+  "fields": {
+    "name": "Seattle"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 19,
+  "fields": {
+    "name": "Epping"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 20,
+  "fields": {
+    "name": "Charlotte I"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 22,
+  "fields": {
+    "name": "Chicago"
+  }
+},
+{
+  "model": "finance.keyword",
+  "pk": 23,
+  "fields": {
+    "name": "Monthly"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 1,
+  "fields": {
+    "name": "Tom Stout Photography"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 2,
+  "fields": {
+    "name": "3"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 3,
+  "fields": {
+    "name": "Airborne Images"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 4,
+  "fields": {
+    "name": "TSP, LLC"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 5,
+  "fields": {
+    "name": "1"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 6,
+  "fields": {
+    "name": "4"
+  }
+},
+{
+  "model": "finance.team",
+  "pk": 7,
+  "fields": {
+    "name": "2"
+  }
+},
+{
+  "model": "finance.client",
+  "pk": 1,
+  "fields": {
+    "business": "NHRA",
+    "first": "Barbara",
+    "last": "Doonan",
+    "street": "140 Via Verde, Ste 100",
+    "address2": "San Dimas, CA 91773",
+    "email": "bdoonan@nhra.com",
+    "phone": "626-250-2333"
+  }
+},
+{
+  "model": "finance.client",
+  "pk": 2,
+  "fields": {
+    "business": "Airborne Images",
+    "first": "Tom",
+    "last": "Stout",
+    "street": "2241 W 171st St",
+    "address2": "Westfield, IN 46074",
+    "email": "tom@airborne-images.net",
+    "phone": "317-987-7387"
+  }
+},
+{
+  "model": "finance.service",
+  "pk": 1,
+  "fields": {
+    "service": "Drone Services"
+  }
+}

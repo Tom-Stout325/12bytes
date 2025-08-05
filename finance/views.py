@@ -38,6 +38,7 @@ from decimal import Decimal
 from django.db.models import F, ExpressionWrapper, DecimalField, Sum
 
 
+
 logger = logging.getLogger(__name__)
 
 
@@ -402,10 +403,12 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
         if self.request.method == 'POST':
             context['formset'] = InvoiceItemFormSet(self.request.POST)
         else:
             context['formset'] = InvoiceItemFormSet()
+
         context['current_page'] = 'invoices'
         return context
 
@@ -416,7 +419,7 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
             try:
                 with transaction.atomic():
                     invoice = form.save(commit=False)
-                    invoice.amount = 0  # initialize to prevent errors
+                    invoice.amount = 0
                     invoice.save()
 
                     for item_form in formset:
@@ -425,20 +428,38 @@ class InvoiceCreateView(LoginRequiredMixin, CreateView):
                             item.invoice = invoice
                             item.save()
 
-                    # Calculate amount using the model method
                     invoice.update_amount()
 
-                    messages.success(self.request, f"Invoice #{invoice.invoice_numb} created successfully.")
+                    messages.success(
+                        self.request,
+                        f"Invoice #{invoice.invoice_number.invoice_numb} created successfully."
+                    )
                     return redirect(self.success_url)
+
             except Exception as e:
                 import traceback
                 print(traceback.format_exc())
                 messages.error(self.request, f"Error saving invoice: {e}")
                 return self.form_invalid(form)
+
         else:
             print("❌ Formset errors:", formset.errors)
             messages.error(self.request, "There were errors with invoice items.")
             return self.form_invalid(form)
+
+
+
+
+def load_invoice_numbers(request):
+    year = request.GET.get('year')
+    data = []
+
+    if year:
+        invoice_numbers = InvoiceNumber.objects.filter(race_year=year).order_by('race_order')
+        data = [{'id': obj.id, 'text': obj.invoice_numb} for obj in invoice_numbers]
+
+    return JsonResponse({'results': data})
+
 
 
 class InvoiceUpdateView(LoginRequiredMixin, UpdateView):

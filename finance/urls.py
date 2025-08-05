@@ -30,6 +30,8 @@ urlpatterns = [
     path('unpaid-invoices/', unpaid_invoices, name='unpaid_invoices'),
     path('invoices/export/csv/', export_invoices_csv, name='export_invoices_csv'),
     path('invoices/export/pdf/', export_invoices_pdf, name='export_invoices_pdf'),
+    path('invoices/ajax/load-invoice-numbers/', load_invoice_numbers, name='ajax_load_invoice_numbers'),
+
 
     # Categories & Subcategories
     path('category-report/', CategoryListView.as_view(), name='category_page'),

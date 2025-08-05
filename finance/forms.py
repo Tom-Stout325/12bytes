@@ -1,17 +1,34 @@
 from django import forms
 from django.forms import inlineformset_factory
 from .models import *
+from datetime import date
+from datetime import datetime
 
 
+
+CURRENT_YEAR = datetime.now().year
+YEAR_CHOICES = [(y, y) for y in range(CURRENT_YEAR, CURRENT_YEAR - 5, -1)]
 
 class TransForm(forms.ModelForm):
+    year = forms.ChoiceField(
+        choices=YEAR_CHOICES,
+        initial=CURRENT_YEAR,
+        label='Invoice Year',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+    )
+    invoice = forms.ModelChoiceField(
+        queryset=Invoice.objects.none(),
+        label='Invoice',
+        widget=forms.Select(attrs={'class': 'form-control'}),
+        required=False,
+    )
     keyword = forms.ModelChoiceField(
         queryset=Keyword.objects.order_by('name'),
         label='Keyword',
         widget=forms.Select(attrs={'class': 'form-control'}),
         required=False
     )
-
     sub_cat = forms.ModelChoiceField(
         queryset=SubCategory.objects.all().order_by('category__category', 'sub_cat'),
         label='Sub-Category',
@@ -22,14 +39,18 @@ class TransForm(forms.ModelForm):
     class Meta:
         model = Transaction
         fields = (
-            'date', 'trans_type', 'sub_cat', 'amount',
-            'invoice_numb', 'team','transaction', 'receipt',
-            'transport_type', 'keyword'
+            'year', 'invoice', 'date', 'trans_type', 'sub_cat', 'amount',
+            'team', 'transaction', 'receipt', 'transport_type', 'keyword'
         )
         widgets = {
             'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'transport_type': forms.Select(attrs={'class': 'form-control'}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        year = self.initial.get('year') or self.fields['year'].initial
+        self.fields['invoice'].queryset = Invoice.objects.filter(date__year=year).order_by('-date')
 
     def clean_receipt(self):
         receipt = self.cleaned_data.get('receipt')
@@ -40,12 +61,8 @@ class TransForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        transport = cleaned_data.get("transport_type")
-        sub_cat = cleaned_data.get("sub_cat")
-
-        if sub_cat:
-            cleaned_data['category'] = sub_cat.category
-
+        if cleaned_data.get('sub_cat'):
+            cleaned_data['category'] = cleaned_data['sub_cat'].category
         return cleaned_data
 
     def save(self, commit=True):
@@ -57,16 +74,40 @@ class TransForm(forms.ModelForm):
         return instance
 
 
+
 class InvoiceForm(forms.ModelForm):
+    year = forms.ChoiceField(
+        choices=[(str(y), str(y)) for y in range(2023, datetime.now().year + 1)],
+        required=False,
+        label="Year",
+        widget=forms.Select(attrs={'class': 'form-select', 'id': 'id_year'})
+    )
+
     class Meta:
         model = Invoice
-        exclude = ['amount']  # keep amount excluded, it's calculated
+        exclude = ['amount']
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'due': forms.DateInput(attrs={'type': 'date'}),
-            'paid_date': forms.DateInput(attrs={'type': 'date'}),
-            'keyword': forms.Select(attrs={'class': 'form-select'}), 
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'due': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'paid_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'keyword': forms.Select(attrs={'class': 'form-select'}),
+            'invoice_number': forms.Select(attrs={'class': 'form-select', 'id': 'id_invoice_number'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['invoice_number'].queryset = InvoiceNumber.objects.none()
+
+        if 'year' in self.data:
+            try:
+                year = int(self.data.get('year'))
+                self.fields['invoice_number'].queryset = InvoiceNumber.objects.filter(race_year=year).order_by('race_order')
+            except (ValueError, TypeError):
+                pass
+        elif self.instance.pk:
+            year = self.instance.invoice_number.race_year
+            self.fields['year'].initial = str(year)
+            self.fields['invoice_number'].queryset = InvoiceNumber.objects.filter(race_year=year)
 
 
 class InvoiceItemForm(forms.ModelForm):

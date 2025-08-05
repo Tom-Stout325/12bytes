@@ -39,11 +39,16 @@ class RecurringTransactionAdmin(admin.ModelAdmin):
     list_filter = ('active', 'day', 'category', 'sub_cat')
     search_fields = ('transaction', 'user__username')
 
+
 class KeywordAdmin(admin.ModelAdmin):
     list_display = ['name', 'id']
     
 
+class InvoiceNumberAdmin(admin.ModelAdmin):
+    list_display = ['invoice_numb', 'race_name', 'race_order', 'race_year']
 
+
+admin.site.register(InvoiceNumber, InvoiceNumberAdmin)
 admin.site.register(InvoiceItem)
 admin.site.register(MileageRate)
 admin.site.register(Client)

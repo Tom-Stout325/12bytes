@@ -134,7 +134,8 @@ class Transaction(models.Model):
     
 
 class Invoice(models.Model):
-    invoice_numb = models.CharField(max_length=10, unique=True)
+    invoice_number = models.OneToOneField('InvoiceNumber', on_delete=models.PROTECT, null=True, blank=True)
+    invoice_numb = models.CharField(max_length=255, blank=True, null=True)
     client = models.ForeignKey('Client', on_delete=models.PROTECT)
     event = models.CharField(max_length=500, blank=True, null=True)
     location = models.CharField(max_length=500, blank=True, null=True)
@@ -170,6 +171,19 @@ class Invoice(models.Model):
         if self.paid_date:
             return (self.paid_date - self.date).days
         return None
+
+
+
+class InvoiceNumber(models.Model):
+    invoice_numb = models.CharField(max_length=10, unique=True)
+    race_name = models.CharField(max_length=100, unique=True)
+    race_order = models.IntegerField()
+    race_year = models.IntegerField()
+
+    def __str__(self):
+        return f"{self.invoice_numb} - {self.race_name} ({self.race_year})"
+
+
 
 
 class InvoiceItem(models.Model):

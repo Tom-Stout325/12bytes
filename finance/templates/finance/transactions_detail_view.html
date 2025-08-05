@@ -47,6 +47,8 @@
 
         <dt class="col-sm-4 fw-semibold">Invoice #:</dt>
         <dd class="col-sm-8">{{ transaction.invoice_numb|default:'—' }}</dd>
+        <dt class="col-sm-4 fw-semibold">Invoice:</dt>
+        <dd class="col-sm-8">{{ transaction.invoice|default:'—' }}</dd>
 
         <dt class="col-sm-4 fw-semibold">Team:</dt>
         <dd class="col-sm-8">{{ transaction.team|default:'—' }}</dd>
