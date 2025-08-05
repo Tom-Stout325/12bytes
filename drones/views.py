@@ -28,6 +28,7 @@ from django.db.models import Count
 from django.utils.decorators import method_decorator
 from django.views.decorators.clickjacking import xframe_options_exempt
 
+
 @login_required
 def drone_portal(request):
     total_flights = FlightLog.objects.count()
