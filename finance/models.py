@@ -151,7 +151,7 @@ class Invoice(models.Model):
     search_vector = SearchVectorField(null=True, blank=True) if SearchVectorField else None
 
     def __str__(self):
-        return f"{self.invoice_numb} - {self.keyword}"
+        return f"{self.invoice_number} - {self.keyword}"
     
     def update_amount(self):
         total = self.items.annotate(
