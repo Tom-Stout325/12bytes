@@ -12,13 +12,13 @@ Incident Reporting System
 
 <div class="container mt-5">
     <div>
-        <h2 class="text-center">Incident Reporting System</h2>
+        <h2 class="text-center text-primary fw-light">Incident Reporting System</h2>
     </div>
 
     <div class="container mt-4">
 
         <div>
-          <a href="{% url 'submit_incident_report' %}" class="btn btn-outline-primary mb-3">Submit New Incident Report</a>
+          <a href="{% url 'submit_incident_report' %}" class="btn btn-outline-primary mb-3 w-100">Submit New Incident Report</a>
         </div>
       
         <!-- Search form -->
@@ -27,7 +27,7 @@ Incident Reporting System
             <input type="text" name="q" class="form-control" placeholder="Search by name, location, or description..." value="{{ search_query }}">
           </div>
           <div class="col-md-2">
-            <button type="submit" class="btn btn-primary w-100">Search</button>
+            <button type="submit" class="btn btn-success w-100 ">Search</button>
           </div>
         </form>
       
@@ -36,7 +36,7 @@ Incident Reporting System
             <div class="accordion-item">
               <h2 class="accordion-header" id="heading{{ forloop.counter }}">
                 <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ forloop.counter }}" aria-expanded="false" aria-controls="collapse{{ forloop.counter }}">
-                  <strong>{{ report.reported_by }}</strong> — {{ report.report_date }}
+                  <strong>{{ report.description }}</strong> — {{ report.report_date }}
                 </button>
               </h2>
               <div id="collapse{{ forloop.counter }}" class="accordion-collapse collapse" aria-labelledby="heading{{ forloop.counter }}" data-bs-parent="#incidentAccordion">

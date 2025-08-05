@@ -71,7 +71,7 @@ def drone_portal(request):
 
 
 
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- Documents Views
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->  D O C U M E N T S   V I E W S
 
 
 @login_required
@@ -209,7 +209,7 @@ def incident_report_list(request):
         'current_page': 'incidents' 
         
     }
-    return render(request, 'drones/incident_list.html', context)
+    return render(request, 'drones/incident_reporting_system.html', context)
 
 
 @login_required
@@ -236,18 +236,40 @@ def sop_upload(request):
     return render(request, 'drones/sop_upload.html', context)
 
 
+
+
 @login_required
 def sop_list(request):
-    sops = SOPDocument.objects.order_by('-created_at')
+    query = request.GET.get('q', '')
+    sops = SOPDocument.objects.all()
+
+    if query:
+        sops = sops.filter(
+            Q(title__icontains=query) |
+            Q(description__icontains=query)
+        )
+
+    sops = sops.order_by('-created_at')
     paginator = Paginator(sops, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
+
     context = {
         'sops': page_obj,
         'page_obj': page_obj,
-        'current_page': 'sop' 
+        'search_query': query,
+        'current_page': 'sop'
     }
     return render(request, 'drones/sop_list.html', context)
+
+
+
+@login_required
+def delete_sop(request, pk):
+    sop = get_object_or_404(SOPDocument, pk=pk)
+    sop.delete()
+    messages.success(request, f"SOP '{sop.title}' deleted successfully.")
+    return redirect('sop_list') 
 
 
 @login_required
@@ -289,7 +311,17 @@ def upload_general_document(request):
     context = {'form': form, 'current_page': 'document'}  
     return render(request, 'drones/upload_general.html', context)
 
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- EQUIPMENT Views
+
+@login_required
+def delete_document(request, pk):
+    doc = get_object_or_404(GeneralDocument, pk=pk)
+    if request.method == 'POST':
+        doc.delete()
+        messages.success(request, "Document deleted successfully.")
+    return redirect('general_document_list')
+
+
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->  E Q U I P M E N T   V I E W S
 
 
 @login_required
@@ -325,7 +357,7 @@ def equipment_create(request):
                 print("FILES data:", request.FILES)
                 print("Form errors:", form.errors)
 
-                print("Form errors:", form.errors)  # <-- for debugging
+                print("Form errors:", form.errors)
     else:
         form = EquipmentForm()
     return render(request, 'drones/equipment_list.html', {
@@ -420,7 +452,7 @@ def equipment_pdf_single(request, pk):
     return response
 
 
-# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- FlightLog Views
+# =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-> F L I G H T L O G   V I E W S
 
 
 
@@ -651,7 +683,7 @@ def upload_flightlog_csv(request):
 
 
 
-#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=- M A P S
+#=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=->     M A P S
 
 def extract_state(address):
     """Try to pull the 2-letter state abbreviation from address like 'City, ST, USA'"""

@@ -15,8 +15,10 @@ from .views import (
     # SOPs and Documents
     sop_list,
     sop_upload,
+    delete_sop,
     general_document_list,
     upload_general_document,
+    delete_document,
 
     # Equipment
     equipment_list,
@@ -79,8 +81,11 @@ urlpatterns = [
     # SOPs and General Documents
     path('sops/', sop_list, name='sop_list'),
     path('sops/upload/', sop_upload, name='sop_upload'),
+    path("sops/delete/<int:pk>/", delete_sop, name="delete_sop"),
     path('documents/', general_document_list, name='general_document_list'),
     path('documents/upload/', upload_general_document, name='upload_general_document'),
+    path('documents/delete/<int:pk>/', delete_document, name='delete_document'),
+
 
     # Equipment
     path('equipment/', equipment_list, name='equipment_list'),

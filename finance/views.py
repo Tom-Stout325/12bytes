@@ -290,7 +290,7 @@ class TransactionDeleteView(LoginRequiredMixin, DeleteView):
 @login_required
 def add_transaction_success(request):
     context = {'current_page': 'transactions'}
-    return render(request, 'transaction/transaction_add_success.html', context)
+    return render(request, 'finance/transaction_add_success.html', context)
 
 
 
