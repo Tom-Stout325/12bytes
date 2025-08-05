@@ -12,7 +12,7 @@ git push origin main
 Deploy Updates on Heroku
 
 Migrate Heroku site:
-heroku run --app airborne-images-12bytes python3 manage.py migrate
+heroku run --app heroku-12bytes python3 manage.py migrate
 
 Launch Heroku DB CLI and check  bd tables:
 heroku run --app airborne-images-12bytes python3 manage.py dbshell

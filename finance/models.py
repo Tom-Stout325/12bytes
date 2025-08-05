@@ -135,7 +135,6 @@ class Transaction(models.Model):
 
 class Invoice(models.Model):
     invoice_number = models.OneToOneField('InvoiceNumber', on_delete=models.PROTECT, null=True, blank=True)
-    invoice_numb = models.CharField(max_length=255, blank=True, null=True)
     client = models.ForeignKey('Client', on_delete=models.PROTECT)
     event = models.CharField(max_length=500, blank=True, null=True)
     location = models.CharField(max_length=500, blank=True, null=True)

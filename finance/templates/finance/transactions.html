@@ -127,7 +127,8 @@
       <thead>
         <tr class="table-primary text-center">
           <th>Date</th>
-          <th>Type</th>
+          <th>Invoice</th>
+          <th>Inv #</th>
           <th>Description</th>
           <th>Amount</th>
           <th>Actions</th>
@@ -137,7 +138,8 @@
         {% for transaction in transactions %}
         <tr>
           <td data-label="Date:" class="text-center">{{ transaction.date|date:"M d, Y" }}</td>
-          <td data-label="Type:">{{ transaction.trans_type }}</td>
+          <td data-label="Type:">{{ transaction.invoice }}</td>
+           <td data-label="Type:">{{ transaction.invoice_numb }}</td>
           <td data-label="Description:">{{ transaction.transaction }}</td>
           <td data-label="Amount:" >${{ transaction.amount }}</td>
           <td data-label="Actions:" class="text-center mb-4">
