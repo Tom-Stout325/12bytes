@@ -44,7 +44,12 @@ class Training(models.Model):
     title = models.CharField(max_length=200)
     date_completed = models.DateField()
     required = models.BooleanField(default=False)
-    certificate = models.ImageField(upload_to=training_certificate_upload_path, blank=True, null=True)
+    certificate = models.FileField(
+        upload_to=training_certificate_upload_path,
+        blank=True,
+        null=True
+)
+
 
     class Meta:
         ordering = ['-date_completed']

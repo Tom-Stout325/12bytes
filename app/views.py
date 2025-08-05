@@ -8,7 +8,6 @@ from .forms import *
 from django.http import HttpResponse
 from django.views.generic import TemplateView
 
-
 from django.contrib import admin
 from django.urls import path
 from django.shortcuts import redirect, render
@@ -17,6 +16,7 @@ from django.conf import settings
 import boto3, os
 from .models import Backup
 from datetime import datetime
+
 
 class BackupAdmin(admin.ModelAdmin):
     change_list_template = "admin/finance/backup_changelist.html"
@@ -66,10 +66,12 @@ class BackupAdmin(admin.ModelAdmin):
 
 
 
+
 @login_required
 def home(request):
-    context = {'current_page': 'home'}  # Breadcrumb for home
-    return render(request, 'home.html', context)
+
+    return render(request, 'home.html')
+
 
 def register(request):
     if request.method == 'POST':
@@ -84,10 +86,51 @@ def register(request):
     return render(request, 'registration/register.html', context)
 
 
+
 @login_required
 def profile(request):
     profile, created = PilotProfile.objects.get_or_create(user=request.user)
 
+    # Handle form submissions
+    if request.method == 'POST':
+        if 'update_user' in request.POST:
+            user_form = UserForm(request.POST, instance=request.user)
+            form = PilotProfileForm(instance=profile)  # unchanged
+            training_form = TrainingForm()  # unchanged
+
+            if user_form.is_valid():
+                user_form.save()
+                messages.success(request, "User info updated.")
+                return redirect('profile')
+
+        elif 'update_profile' in request.POST:
+            form = PilotProfileForm(request.POST, request.FILES, instance=profile)
+            user_form = UserForm(instance=request.user)
+            training_form = TrainingForm()
+
+            if form.is_valid():
+                form.save()
+                messages.success(request, "Pilot credentials updated.")
+                return redirect('profile')
+
+        elif 'add_training' in request.POST:
+            training_form = TrainingForm(request.POST, request.FILES)
+            form = PilotProfileForm(instance=profile)
+            user_form = UserForm(instance=request.user)
+
+            if training_form.is_valid():
+                training = training_form.save(commit=False)
+                training.pilot = profile
+                training.save()
+                messages.success(request, "Training record added.")
+                return redirect('profile')
+    else:
+        # Initial load
+        form = PilotProfileForm(instance=profile)
+        user_form = UserForm(instance=request.user)
+        training_form = TrainingForm()
+
+    # Filtering training list
     year_filter = request.GET.get('year')
     trainings = profile.trainings.all()
     if year_filter:
@@ -97,6 +140,9 @@ def profile(request):
 
     context = {
         'profile': profile,
+        'form': form,
+        'user_form': user_form,
+        'training_form': training_form,
         'trainings': trainings,
         'years': [y.year for y in training_years],
         'current_page': 'profile',
@@ -120,6 +166,8 @@ def edit_profile(request):
     context = {'form': form, 'current_page': 'profile'} 
     return render(request, 'app/edit_profile.html', context)
 
+
+
 @login_required
 def delete_pilot_profile(request):
     profile = get_object_or_404(PilotProfile, user=request.user)
@@ -131,6 +179,7 @@ def delete_pilot_profile(request):
         return redirect('login')
     context = {'profile': profile, 'current_page': 'profile'}  # Breadcrumb for profile
     return render(request, 'app/pilot_profile_delete.html', context)
+
 
 @login_required
 def training_create(request):
@@ -147,6 +196,8 @@ def training_create(request):
     context = {'form': form, 'current_page': 'profile'}  # Breadcrumb for profile
     return render(request, 'app/training_form.html', context)
 
+
+
 @login_required
 def training_edit(request, pk):
     training = get_object_or_404(Training, pk=pk, pilot__user=request.user)
@@ -156,6 +207,8 @@ def training_edit(request, pk):
         return redirect('profile')
     context = {'form': form, 'current_page': 'profile'}  # Breadcrumb for profile
     return render(request, 'app/training_form.html', context)
+
+
 
 @login_required
 def training_delete(request, pk):
