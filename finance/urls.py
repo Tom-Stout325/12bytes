@@ -15,6 +15,8 @@ urlpatterns = [
     path('transaction/<int:pk>/', TransactionDetailView.as_view(), name='transaction_detail'),
     path('transaction/edit/<int:pk>/', TransactionUpdateView.as_view(), name='edit_transaction'),
     path('transaction/delete/<int:pk>/', TransactionDeleteView.as_view(), name='delete_transaction'),
+    path('transactions/export/', export_transactions_csv, name='export_transactions_csv'), # Exports names vs FK ID
+
 
     # Invoices
     path('invoices/', InvoiceListView.as_view(), name='invoice_list'),
@@ -69,6 +71,8 @@ urlpatterns = [
     path('mileage/<int:pk>/edit/', MileageUpdateView.as_view(), name='mileage_update'),
     path('mileage/<int:pk>/delete/', MileageDeleteView.as_view(), name='mileage_delete'),
     path('mileage/update-rate/', update_mileage_rate, name='update_mileage_rate'),
+    path('mileage/export/csv/', export_mileage_csv, name='export_mileage_csv'),
+
 
     # Keywords
     path('keywords/', KeywordListView.as_view(), name='keyword_list'),

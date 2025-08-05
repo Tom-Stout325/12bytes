@@ -4,8 +4,6 @@
 {% block content %}
 <div class="container mt-4">
   <h2 class="text-primary text-center mb-4 fw-light">Equipment Inventory</h2>
-
-  <!-- Action Buttons Row -->
   <div class="row align-items-center mb-4 gy-2">
     <div class="col-12 col-md-auto">
       <button class="btn btn-outline-primary w-100" type="button" data-bs-toggle="collapse" data-bs-target="#addEquipmentForm">
@@ -13,21 +11,22 @@
       </button>
     </div>
     <div class="col-12 col-md-auto ms-md-auto text-md-end">
-      <a href="{% url 'equipment_pdf' %}" target="_blank" class="btn btn-outline-success w-100">
+      <a href="{% url 'equipment_pdf' %}" target="_blank" class="btn btn-outline-danger w-100">
         <i class="fas fa-file-pdf"></i> Export to PDF
       </a>
     </div>
+    <div class="col-12 col-md-auto ms-md-auto text-md-end">
+      <a href="{% url 'export_equipment_csv' %}" class="btn btn-outline-success w-100">
+        <i class="fas fa-file-pdf"></i> Export to CSV
+      </a>
   </div>
-
-  <!-- Add Equipment Form -->
+</div>
   <div class="collapse mb-4" id="addEquipmentForm">
     <form method="post" enctype="multipart/form-data" action="{% url 'equipment_create' %}">
       {% csrf_token %}
       {% include 'drones/equipment_form.html' %}
     </form>
   </div>
-
-  <!-- Equipment Table -->
   <div class="table-responsive">
     <table class="table table-bordered table-hover align-middle">
       <thead class="table-light">

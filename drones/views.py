@@ -452,6 +452,58 @@ def equipment_pdf_single(request, pk):
     return response
 
 
+import csv
+from django.http import HttpResponse
+from django.contrib.auth.decorators import login_required
+from drones.models import Equipment  # Adjust path if needed
+
+@login_required
+def export_equipment_csv(request):
+    equipment = Equipment.objects.all()
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="equipment.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Name',
+        'Type',
+        'Brand',
+        'Model',
+        'Serial Number',
+        'FAA Number',
+        'FAA Certificate URL',
+        'Purchase Date',
+        'Purchase Cost',
+        'Receipt URL',
+        'Date Sold',
+        'Sale Price',
+        'Deducted Full Cost',
+        'Active',
+        'Notes',
+    ])
+
+    for e in equipment:
+        writer.writerow([
+            e.name,
+            e.get_equipment_type_display(),  # human-readable label for choices
+            e.brand,
+            e.model,
+            e.serial_number,
+            e.faa_number,
+            e.faa_certificate.url if e.faa_certificate else '',
+            e.purchase_date,
+            e.purchase_cost,
+            e.receipt.url if e.receipt else '',
+            e.date_sold,
+            e.sale_price,
+            'Yes' if e.deducted_full_cost else 'No',
+            'Yes' if e.active else 'No',
+            e.notes.replace('\n', ' ').replace('\r', '') if e.notes else '',
+        ])
+
+    return response
+
 # =-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-> F L I G H T L O G   V I E W S
 
 

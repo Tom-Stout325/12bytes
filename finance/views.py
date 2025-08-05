@@ -355,6 +355,42 @@ class DownloadTransactionsCSV(LoginRequiredMixin, View):
 
 
 
+@login_required
+def export_transactions_csv(request):
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="transactions.csv"'
+
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Date', 'Type', 'Amount', 'Transaction',
+        'Category', 'Sub-Category', 'Team', 'Keyword',
+        'Invoice #', 'Invoice PK', 'Transport Type', 'User'
+    ])
+
+    transactions = Transaction.objects.select_related(
+        'category', 'sub_cat', 'team', 'keyword', 'invoice', 'user'
+    )
+
+    for t in transactions:
+        writer.writerow([
+            t.date,
+            t.trans_type,
+            t.amount,
+            t.transaction,
+            t.category.category if t.category else '',
+            t.sub_cat.sub_cat if t.sub_cat else '',
+            t.team.name if t.team else '',
+            t.keyword.name if t.keyword else '',
+            t.invoice.invoice_numb if t.invoice else '',
+            t.invoice.pk if t.invoice else '',
+            t.transport_type,
+            t.user.get_full_name() or t.user.username
+        ])
+
+    return response
+
 # ---------------------------------------------------------------------------------------------------------------  Invoices
 
 
@@ -672,37 +708,42 @@ def unpaid_invoices(request):
 
 @login_required
 def export_invoices_csv(request):
-    invoice_view = InvoiceListView()
-    invoice_view.request = request
-    queryset = invoice_view.get_queryset()
+    invoices = Invoice.objects.select_related('client', 'keyword', 'service')
 
-    class Echo:
-        def write(self, value):
-            return value
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="invoices.csv"'
 
-    def stream_csv(queryset):
-        writer = csv.writer(Echo())
-        yield writer.writerow(['Invoice #', 'Client', 'Location', 'Service', 'Amount', 'Date', 'Due', 'Paid', 'Days to Pay'])
-        for invoice in queryset.iterator():
-            yield writer.writerow([
-                invoice.invoice_numb,
-                str(invoice.client),
-                invoice.keyword.name if invoice.keyword else '',
-                str(invoice.service),
-                invoice.amount,
-                invoice.date,
-                invoice.due,
-                invoice.paid_date or "No",
-                invoice.days_to_pay if invoice.paid_date else "—"
-            ])
+    writer = csv.writer(response)
+    writer.writerow([
+        'Invoice #',
+        'Client',
+        'Event',
+        'Location',
+        'Keyword',
+        'Service',
+        'Amount',
+        'Date',
+        'Due Date',
+        'Paid Date',
+        'Status',
+    ])
 
-    try:
-        response = StreamingHttpResponse(stream_csv(queryset), content_type='text/csv')
-        response['Content-Disposition'] = 'attachment; filename="invoices.csv"'
-        return response
-    except Exception as e:
-        logger.error(f"Error generating CSV for user {request.user.id}: {e}")
-        return HttpResponse("Error generating CSV", status=500)
+    for inv in invoices:
+        writer.writerow([
+            inv.invoice_numb,
+            str(inv.client) if inv.client else '',
+            inv.event or '',
+            inv.location or '',
+            str(inv.keyword) if inv.keyword else '',
+            str(inv.service) if inv.service else '',
+            f"{inv.amount:.2f}",
+            inv.date,
+            inv.due,
+            inv.paid_date or '',
+            inv.status,
+        ])
+
+    return response
 
 
 @login_required
@@ -1636,6 +1677,44 @@ def update_mileage_rate(request):
         form = MileageRateForm(instance=mileage_rate)
     context = {'form': form, 'current_page': 'mileage'}
     return render(request, 'finance/update_mileage_rate.html', context)
+
+
+@login_required
+def export_mileage_csv(request):
+    miles_entries = Miles.objects.filter(user=request.user).select_related('client', 'invoice')
+
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = 'attachment; filename="mileage.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow([
+        'Date',
+        'Start Odometer',
+        'End Odometer',
+        'Total Miles',
+        'Client',
+        'Invoice #',
+        'Tax Deductible',
+        'Job',
+        'Vehicle',
+        'Mileage Type',
+    ])
+
+    for entry in miles_entries:
+        writer.writerow([
+            entry.date,
+            entry.begin,
+            entry.end,
+            entry.total,
+            str(entry.client) if entry.client else '',
+            entry.invoice.invoice_numb if entry.invoice else '',
+            entry.tax,
+            entry.job or '',
+            entry.vehicle or '',
+            entry.mileage_type,
+        ])
+
+    return response
 
 
 # ---------------------------------------------------------------------------------------------------------------  Keywords

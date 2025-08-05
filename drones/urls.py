@@ -27,6 +27,7 @@ from .views import (
     equipment_delete,
     equipment_pdf,
     equipment_pdf_single,
+    export_equipment_csv,
 
     # Drones
     drone_portal,
@@ -94,6 +95,7 @@ urlpatterns = [
     path('equipment/<uuid:pk>/edit/', equipment_edit, name='equipment_edit'),
     path('equipment/<uuid:pk>/delete/', equipment_delete, name='equipment_delete'),
     path('equipment/<uuid:pk>/pdf/', equipment_pdf_single, name='equipment_pdf_single'),
+    path('equipment/export/csv/', export_equipment_csv, name='export_equipment_csv'),
 
 
     # Flight Logs
