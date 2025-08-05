@@ -105,7 +105,6 @@ class Transaction(models.Model):
     keyword = models.ForeignKey('Keyword', null=True, blank=True, on_delete=models.PROTECT)
     receipt = models.FileField(upload_to='receipts/', blank=True, null=True)
     date = models.DateField()
-    invoice_numb = models.CharField(max_length=255, blank=True, null=True)
     invoice = models.ForeignKey('Invoice', null=True, blank=True, on_delete=models.SET_NULL, related_name='transactions')
     recurring_template = models.ForeignKey('RecurringTransaction', null=True, blank=True, on_delete=models.SET_NULL, related_name='transactions')
     transport_type = models.CharField(max_length=30, choices=TRANSPORT_CHOICES, null=True, blank=True, help_text="Used to identify if actual expenses apply")
@@ -117,7 +116,7 @@ class Transaction(models.Model):
             models.Index(fields=['keyword']),
             models.Index(fields=['category']),
             models.Index(fields=['sub_cat']),
-            models.Index(fields=['invoice_numb']),
+            models.Index(fields=['invoice']),
         ]
         verbose_name_plural = "Transactions"
         ordering = ['date']

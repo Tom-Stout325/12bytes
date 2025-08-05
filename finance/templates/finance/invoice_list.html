@@ -111,7 +111,7 @@
       <tbody>
         {% for invoice in invoices %}
         <tr class="text-center">
-          <td>{{ invoice.invoice_numb }}</td>
+          <td>{{ invoice.invoice }}</td>
           <td>{{ invoice.client }}</td>
           <td>{{ invoice.keyword }}</td>
           <td>${{ invoice.amount|floatformat:2|intcomma }}</td>

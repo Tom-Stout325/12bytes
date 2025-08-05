@@ -49,7 +49,7 @@
         {% for receipt in receipts %}
           <tr class="text-center invoice-row">
             <td>{{ receipt.date }}</td>
-            <td>{{receipt.transaction.invoice_numb }}</td>
+            <td>{{receipt.transaction.invoice }}</td>
             <td>{{ receipt.description }}</td>
             <td>$ {{ receipt.amount|floatformat:2|intcomma }}</td>
             <td>

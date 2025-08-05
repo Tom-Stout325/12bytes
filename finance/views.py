@@ -334,7 +334,7 @@ class DownloadTransactionsCSV(LoginRequiredMixin, View):
                         tx.trans_type or '',
                         tx.transaction,
                         tx.amount,
-                        tx.invoice_numb or ''
+                        tx.invoice or ''
                     ])
 
             # Determine filename
@@ -384,7 +384,7 @@ def export_transactions_csv(request):
             t.sub_cat.sub_cat if t.sub_cat else '',
             t.team.name if t.team else '',
             t.keyword.name if t.keyword else '',
-            t.invoice.invoice_numb if t.invoice else '',
+            t.invoice.invoice if t.invoice else '',
             t.invoice.pk if t.invoice else '',
             t.transport_type,
             t.user.get_full_name() or t.user.username
@@ -1728,7 +1728,7 @@ def export_mileage_csv(request):
             entry.end,
             entry.total,
             str(entry.client) if entry.client else '',
-            entry.invoice.invoice_numb if entry.invoice else '',
+            entry.invoice.invoice if entry.invoice else '',
             entry.tax,
             entry.job or '',
             entry.vehicle or '',

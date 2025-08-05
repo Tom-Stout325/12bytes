@@ -3,7 +3,7 @@
 {% load l10n %}
 {% load finance_tags %}
 
-{% block title %}Invoice #{{ invoice.invoice_numb }}{% endblock %}
+{% block title %}Invoice #{{ invoice.invoice }}{% endblock %}
 
 {% block content %}
 <style>
@@ -46,7 +46,7 @@
       <div class="card-body">
         <div class="row mb-3">
           <div class="col-md-6">
-            <p><strong>Invoice #:</strong> {{ invoice.invoice_numb }}</p>
+            <p><strong>Invoice #:</strong> {{ invoice.invoice}}</p>
             <p><strong>Client:</strong> {{ invoice.client }}</p>
             <p><strong>Event:</strong> {{ invoice.event }}</p>
           </div>

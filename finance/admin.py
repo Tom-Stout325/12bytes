@@ -6,7 +6,7 @@ from .models import *
 
     
 class TransactionAdmin(admin.ModelAdmin):
-    list_display    = ['date', 'category', 'sub_cat', 'transaction', 'keyword', 'invoice_numb']
+    list_display    = ['date', 'category', 'sub_cat', 'transaction', 'keyword', 'invoice']
 
 
 class GroupAdmin(admin.ModelAdmin):
@@ -18,7 +18,7 @@ class TeamAdmin(admin.ModelAdmin):
     
     
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('invoice_numb', 'client', 'amount', 'status', 'paid_date', 'days_to_pay')
+    list_display = ('client', 'amount', 'status', 'paid_date', 'days_to_pay')
 
     def days_to_pay(self, obj):
         return obj.days_to_pay if obj.days_to_pay is not None else "-"
@@ -45,7 +45,7 @@ class KeywordAdmin(admin.ModelAdmin):
     
 
 class InvoiceNumberAdmin(admin.ModelAdmin):
-    list_display = ['invoice_numb', 'race_name', 'race_order', 'race_year']
+    list_display = ['invoice', 'race_name', 'race_order', 'race_year']
 
 
 admin.site.register(InvoiceNumber, InvoiceNumberAdmin)
