@@ -1,6 +1,0 @@
-GitHub Repo:  Tom-Stout325/12bytes
-Heroku:       suite-12bytes
-
-
-Twilio Recovery Code:  LR89GT6SLK9LT2Q5D1ZT35J5
-

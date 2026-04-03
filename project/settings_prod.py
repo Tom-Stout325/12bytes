@@ -1,5 +1,4 @@
 from .settings_base import *  # noqa
-from .settings_base import env
 
 DEBUG = False
 ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
@@ -42,3 +41,11 @@ if USE_S3:
             "querystring_auth": AWS_QUERYSTRING_AUTH,
         },
     }
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.sendgrid.net"
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "apikey"
+EMAIL_HOST_PASSWORD = env("SENDGRID_API_KEY")
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL")

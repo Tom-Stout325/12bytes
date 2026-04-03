@@ -73,4 +73,5 @@ Thumbs.db
 # =========================
 # Dev Folder (your request)
 # =========================
-dev/
+dev/info.txt
+info.txt
