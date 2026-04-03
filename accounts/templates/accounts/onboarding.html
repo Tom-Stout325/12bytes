@@ -20,8 +20,8 @@
               <div class="alert alert-danger">{{ form.non_field_errors }}</div>
             {% endif %}
             <div class="row g-3">
-              {% for field in form %}
-                <div class="col-12 {% if field.name in 'city state postal_code'.split %}col-md-4{% endif %}">
+             {% for field in form %}
+                <div class="col-12{% if field.name == 'city' or field.name == 'state' or field.name == 'postal_code' %} col-md-4{% endif %}">
                   <label class="form-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
                   {{ field }}
                   {% if field.help_text %}<div class="form-text">{{ field.help_text }}</div>{% endif %}
