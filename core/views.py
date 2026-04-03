@@ -1,3 +1,6 @@
+from __future__ import annotations
+
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import redirect, render
 
@@ -7,7 +10,11 @@ from .models import BusinessMembership
 
 @login_required
 def onboarding(request):
-    existing = BusinessMembership.objects.filter(user=request.user, is_active=True).select_related("business").first()
+    existing = (
+        BusinessMembership.objects.filter(user=request.user, is_active=True)
+        .select_related("business")
+        .first()
+    )
     if existing:
         return redirect("home")
 
@@ -21,8 +28,9 @@ def onboarding(request):
                 role=BusinessMembership.Role.OWNER,
                 is_active=True,
             )
+            messages.success(request, "Business created successfully.")
             return redirect("home")
     else:
         form = BusinessOnboardingForm()
 
-    return render(request, "core/onboarding.html", {"form": form})
+    return render(request, "core/business_onboarding.html", {"form": form})

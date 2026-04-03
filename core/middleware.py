@@ -31,7 +31,16 @@ class ActiveBusinessMiddleware:
         if any(path.startswith(prefix) for prefix in self.allow_prefixes):
             return self.get_response(request)
 
-        if request.user.is_authenticated and request.business is None and path != "/core/onboarding/":
-            return redirect("core:onboarding")
+        if request.user.is_authenticated and request.business is None:
+            return redirect("accounts:onboarding")
+
+        business = getattr(request, "business", None)
+        if request.user.is_authenticated and business is not None:
+            try:
+                profile = business.company_profile
+            except Exception:
+                profile = None
+            if profile is None or not profile.is_complete:
+                return redirect("accounts:onboarding")
 
         return self.get_response(request)

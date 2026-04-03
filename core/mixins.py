@@ -1,9 +1,10 @@
 class BusinessScopedQuerysetMixin:
+    """
+    Filters a view queryset to the active business attached by middleware.
+    """
+
     business_field = "business"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        business = getattr(self.request, "business", None)
-        if business is None:
-            return queryset.none()
-        return queryset.filter(**{self.business_field: business})
+        qs = super().get_queryset()
+        return qs.filter(**{self.business_field: self.request.business})

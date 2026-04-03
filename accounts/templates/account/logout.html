@@ -1,0 +1,10 @@
+{% extends "account/base.html" %}
+{% block head_title %}Log out{% endblock %}
+{% block content %}
+<h1 class="h4 mb-3">Log out</h1>
+<form method="post">
+  {% csrf_token %}
+  <p>Are you sure you want to log out?</p>
+  <button class="btn btn-primary w-100" type="submit">Log out</button>
+</form>
+{% endblock %}
